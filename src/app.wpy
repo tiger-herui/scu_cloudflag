@@ -1,0 +1,79 @@
+<style lang="less">
+@import"./icon/";
+
+</style>
+
+<script>
+import wepy from 'wepy'
+import 'wepy-async-function'
+
+
+export default class extends wepy.app {
+  config = {
+    pages: [
+      'pages/index',
+      'pages/user',
+      'pages/thing',
+      'pages/que'
+    ],
+    window: {
+      backgroundTextStyle: '#FFD700',
+      navigationBarBackgroundColor: '#FFD700',
+      navigationBarTitleText: 'SCU云旗社区',
+      navigationBarTextStyle: 'black'
+    },
+    tabBar:{
+      selectedColor: "#1283c0",
+      color: "#FF8C00",
+      backgroundColor: "#FFD700",
+      list: [
+        {
+          pagePath: "pages/index",
+          text: "首页",
+          iconPath: "icon/shouye.png",
+          selectedIconPath: "icon/shouye2.png"
+        },
+        {
+          pagePath:"pages/thing",
+          text:"百宝",
+          iconPath:"icon/baibao.png",
+          selectedIconPath:"icon/baibao2.png"
+        },
+        {
+          pagePath: "pages/user",
+          text: "问答",
+          iconPath: "icon/wenda.png",
+          selectedIconPath: "icon/wenda2.png"
+        },
+        {
+          pagePath: "pages/user",
+          text: "我的",
+          iconPath: "icon/wode.png",
+          selectedIconPath: "icon/wode2.png"
+        }
+        
+      ]
+    }
+  }
+
+  globalData = {
+    verify:0
+  };
+
+  constructor () {
+    super()
+    this.use('requestfix')
+  }
+
+  onLaunch() {
+    this.testAsync()
+  }
+
+ 
+
+  async testAsync () {
+   
+  }
+
+}
+</script>

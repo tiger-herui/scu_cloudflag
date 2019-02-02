@@ -1,0 +1,41 @@
+<style lang="less">
+@import "./src/less/config";
+page{
+    width: 100%;
+    height: 100%;
+    > view{
+        width: 100%;
+        height: 100%;
+    }
+}
+ .name {
+      text-align: center;
+      margin-top: 20rpx;
+      width: 100%;
+    }
+</style>
+
+<template>
+<view class="user">
+ <view class="name">通知设置</view>
+</view>
+ 
+</template>
+
+<script>
+  import wepy from 'wepy'
+  import Panel from '@/components/panel' // alias example
+  import Counter from 'counter' // alias example
+  import List from '../components/list' // aliasFields example
+  import moduleA from 'module-a' // aliasFields ignore module example
+  import Group from '../components/group'
+  import Toast from 'wepy-com-toast'
+  import testMixin from '../mixins/test'
+
+  export default class user extends wepy.page {
+      config = {
+          navigationTitleText:"我的"
+      }
+
+  }
+  </script>
