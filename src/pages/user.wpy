@@ -1,41 +1,196 @@
 <style lang="less">
-@import "./src/less/config";
-page{
-    width: 100%;
-    height: 100%;
-    > view{
-        width: 100%;
-        height: 100%;
-    }
+.header {
+  background: #ff6a3c;
+  height: 260rpx;
+  width: 100%;
 }
- .name {
-      text-align: center;
-      margin-top: 20rpx;
-      width: 100%;
+
+.header_content {
+  width: 100%;
+  margin: 0 auto;
+  text-align: center;
+  padding-top: 48rpx;
+}
+
+.avatarUrl {
+  width: 122rpx;
+  height: 122rpx;
+  border-radius: 1000px;
+}
+
+.nickName {
+  font-size: 30rpx;
+  padding-top: 15rpx;
+}
+
+.info_block {
+  margin-top: 10rpx;
+  .item {
+    border-top: 1rpx solid #dbdbdb;
+    background: #fff;
+    padding: 34rpx 28rpx;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .item:last-child {
+    border-bottom: 1rpx solid #dbdbdb;
+  }
+  .item_content {
+    display: flex;
+    align-items: center;
+    .text {
+      margin-left: 30rpx;
+      color: #1a1a1a;
     }
+  }
+  .item_img {
+    width: 42rpx;
+    height: 42rpx;
+  }
+  .arrow {
+    color: #cccccc;
+    font-size: 32rpx;
+  }
+  .tip {
+    color: #999;
+    font-size: 24rpx;
+    margin-top: 20rpx;
+    margin-left: 60rpx;
+  }
+}
 </style>
 
 <template>
-<view class="user">
- <view class="name">通知设置</view>
-</view>
- 
+  <view class="info">
+    <!-- 头像 -->
+    <view class="header">
+      <view class="header_content">
+        <image class="avatarUrl" src="{{avatarUrl}}">
+        <view class="nickName cfff">{{nickName}}</view>
+      </view>
+    </view>
+    <!-- 下拉栏目 -->
+    <view class="info_block">
+      <navigator class="item" url="/pages/register" wx:if="{{bShowBind}}">
+        <view>
+          <view class="item_content">
+            <image class="item_img" src="../images/icon_my_01.png">
+            <view class="text" style="color:#fe2a2a">绑定手机号</view>
+          </view>
+          <view class="tip">绑定手机号可更好的让我们服务好您！</view>
+        </view>
+        <view class="arrow">&gt;</view>
+      </navigator>
+      <navigator class="item" url="../pages/order">
+        <view class="item_content">
+          <image class="item_img" src="../icon/dingdan.png">
+          <view class="text">我的订单</view>
+        </view>
+        <view class="arrow">&gt;</view>
+      </navigator>
+      <navigator class="item" url="/pages/points">
+        <view class="item_content">
+          <image class="item_img" src="../icon/jifen.png">
+          <view class="text">我的积分</view>
+        </view>
+        <view class="arrow">&gt;</view>
+      </navigator>
+      <navigator class="item" url="/pages/collection?type=0">
+        <view class="item_content">
+          <image class="item_img" src="../icon/zuji.png">
+          <view class="text">我的足迹</view>
+        </view>
+        <view class="arrow">&gt;</view>
+      </navigator>
+      <navigator class="item" url="/pages/collection?type=1">
+        <view class="item_content">
+          <image class="item_img" src="../icon/shoucang.png">
+          <view class="text">我的收藏</view>
+        </view>
+        <view class="arrow">&gt;</view>
+      </navigator>
+    </view>
+    <view class="info_block">
+      <navigator class="item" url="/pages/messages">
+        <view class="item_content">
+          <image class="item_img" src="../icon/xiaoxi.png">
+          <view class="text">我的消息</view>
+        </view>
+        <view class="arrow">&gt;</view>
+      </navigator>
+      <navigator class="item" url="/pages/setting">
+        <view class="item_content">
+          <image class="item_img" src="../icon/shezhi.png">
+          <view class="text">设置</view>
+        </view>
+        <view class="arrow">&gt;</view>
+      </navigator>
+    </view>
+  </view>
 </template>
 
 <script>
-  import wepy from 'wepy'
-  import Panel from '@/components/panel' // alias example
-  import Counter from 'counter' // alias example
-  import List from '../components/list' // aliasFields example
-  import moduleA from 'module-a' // aliasFields ignore module example
-  import Group from '../components/group'
-  import Toast from 'wepy-com-toast'
-  import testMixin from '../mixins/test'
-
-  export default class user extends wepy.page {
-      config = {
-          navigationTitleText:"我的"
-      }
+import wepy from 'wepy';
+import api from '@/api/api';
+import {
+  USER_INFO,USER_SPECICAL_INFO
+} from '@/utils/constant';
+export default class Index extends wepy.page {
+  config = {
+    navigationBarTitleText: '我的',
+  }
+  components = {
 
   }
-  </script>
+
+  data = {
+    avatarUrl: "",
+    nickName: "",
+    bShowBind:false
+  }
+  async getUserInfo(phone,code) {
+    let that = this;
+    let userSpecialInfo = wepy.getStorageSync(USER_SPECICAL_INFO) || {};
+    let openId = userSpecialInfo.openid;
+    const json = await api.getUserInfo({
+      query: {
+        openId: openId
+      }
+    });
+
+    if (json.data.code == 0) {
+      if (json.data.user.mobile.length>0) {
+        this.bShowBind=false;
+      } else {
+        this.bShowBind = true;
+      }
+      that.$apply();
+    } else {
+      tip.error(json.data.msg)
+    }
+    that.showLoading = false;
+  }
+
+  onLoad() {
+    let that = this;
+    let userInfo = wepy.getStorageSync(USER_INFO);
+    that.avatarUrl = userInfo.avatarUrl;
+    that.nickName = userInfo.nickName;
+  }
+  onShow(){
+    let that = this;
+    this.getUserInfo();
+  }
+  computed = {
+
+  }
+  methods = {
+
+  }
+  events = {
+
+  }
+}
+
+</script>

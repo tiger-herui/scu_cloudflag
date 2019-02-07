@@ -27,7 +27,16 @@
 </style>
 
 <template>
-  <p> hai</p>
+
+  <!-- 公告区, 用于置放最新公告,头条新闻,推广消息 -->
+    <swiper style="height: {{swiper_height}}px;" class="swiper" autoplay="true" interval="4000" duration="1000">
+      <block wx:for="{{notices}}" wx:key="{{index}}">
+        <swiper-item>
+          <image style="height: {{swiper_height}}px;" @tap="noticeTo({{item.id}})" src="{{item.cover}}" class="slide-image" />
+        </swiper-item>
+      </block>
+    </swiper>
+
 </template>
 
 <script>
@@ -46,8 +55,6 @@
     data = {
 
       }
-
-    }
 
     computed = {
       now () {
@@ -105,7 +112,6 @@
     }
 
     onLoad() { 
-
     }
   }
 </script>
