@@ -112,7 +112,7 @@
       </navigator>
     </view>
     <view class="info_block">
-      <navigator class="item" url="/pages/messages">
+      <navigator class="item" url="/pages/message">
         <view class="item_content">
           <image class="item_img" src="../icon/xiaoxi.png">
           <view class="text">我的消息</view>
@@ -132,10 +132,10 @@
 
 <script>
 import wepy from 'wepy';
-import api from '@/api/api';
+import api from '../api/api';
 import {
   USER_INFO,USER_SPECICAL_INFO
-} from '@/utils/constant';
+} from '../utils/constant';
 export default class Index extends wepy.page {
   config = {
     navigationBarTitleText: '我的',
@@ -182,15 +182,7 @@ export default class Index extends wepy.page {
     let that = this;
     this.getUserInfo();
   }
-  computed = {
 
-  }
-  methods = {
-
-  }
-  events = {
-
-  }
 }
 
 </script>

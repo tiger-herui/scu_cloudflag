@@ -13,10 +13,14 @@ export default class extends wepy.app {
       'pages/index',
       'pages/user',
       'pages/thing',
-      'pages/que'
+      'pages/que',
+      'pages/points',
+      'pages/message',
+      'pages/setting',
+      'pages/order'
     ],
     window: {
-      backgroundTextStyle: '#FFD700',
+      backgroundTextStyle: 'light',
       navigationBarBackgroundColor: '#FFD700',
       navigationBarTitleText: 'SCU云旗社区',
       navigationBarTextStyle: 'black'
@@ -41,8 +45,8 @@ export default class extends wepy.app {
         {
           pagePath: "pages/user",
           text: "问答",
-          iconPath: "icon/wenda.png",
-          selectedIconPath: "icon/wenda2.png"
+          iconPath:"icon/wenda.png",
+          selectedIconPath:"icon/wenda2.png"
         },
         {
           pagePath: "pages/user",
