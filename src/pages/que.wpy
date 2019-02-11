@@ -1,9 +1,36 @@
-<style>
-
-</style>
 <template>
-    
+
 </template>
 <script>
+import wepy from 'wepy'
 
+export default class extends wepy.page {
+  config = {
+    navigationBarTitleText: '问答'
+  }
+  data = {
+    postList: [{
+      title: 'post1',
+      publishedDate: new Date(2015, 5, 19, 20, 15, 30, 123)
+    },{
+      title: 'post2',
+      publishedDate: new Date(2015, 5, 20, 21, 16, 31, 123)
+    },{
+      title: 'post3',
+      publishedDate: new Date(2015, 5, 21, 12, 24, 30, 123)
+    }]
+  }
+  methods = {
+  }
+  components = {
+  }
+  onLoad() {
+    // 加载问题: loadMoreQuestions
+  }
+  loadMoreQuestions() {
+    // 从后端获取问题列表存储到postList中
+  }
+}
 </script>
+<style>
+</style>

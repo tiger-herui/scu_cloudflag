@@ -43,7 +43,7 @@ export default class extends wepy.app {
           selectedIconPath:"icon/baibao2.png"
         },
         {
-          pagePath: "pages/user",
+          pagePath: "pages/que",
           text: "问答",
           iconPath:"icon/wenda.png",
           selectedIconPath:"icon/wenda2.png"
