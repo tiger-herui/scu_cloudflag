@@ -86,7 +86,7 @@
     <scroll-view class="classify_detail" scroll-y scroll-with-animation="true" style="height:{{windowHeight-50}}px">
         <view class="children">
           <navigator hover-class="none" class="children_item" wx:for="{{childcateList}}" wx:for-item="item" wx:key="index" url="/pages/search?cateCode={{item.secondCategory.code}}&title={{item.secondCategory.name}}">
-            <image class="child_image" src="{{item.secondCategory.thumLogo}}">
+            <image class="child_image" src="{{item.secondCategory.thumLogo}}"/>
             <view class="child_name">{{item.secondCategory.name}}</view>
           </navigator>
         </view>

@@ -57,7 +57,7 @@
         </view>-->
         <view class="discover_list">
             <navigator class="item" open-type="navigate" wx:for="{{list}}" wx:key="item" url="/pages/home_detail?code={{item.code}}" >
-                <image class="discover_img" src="{{item.logo}}">
+                <image class="discover_img" src="{{item.logo}}"/>
                 <view class="info" wx:for="{{item.attrs}}" wx:key="item">
                     <view>{{item.attrName.attrName}}：</view>
                     <view wx:for="{{item.attrValList}}" wx:key="item">{{item.attrVal}} </view>
