@@ -1,5 +1,6 @@
 <style lang="less">
 @import "./src/less/style";
+@import "./src/less/icon";
 .search_read_only .search_content {
   width: 100%;
 }
@@ -85,7 +86,7 @@
     <scroll-view class="classify_detail" scroll-y scroll-with-animation="true" style="height:{{windowHeight-50}}px">
         <view class="children">
           <navigator hover-class="none" class="children_item" wx:for="{{childcateList}}" wx:for-item="item" wx:key="index" url="/pages/search?cateCode={{item.secondCategory.code}}&title={{item.secondCategory.name}}">
-            <image class="child_image" src="{{item.secondCategory.thumLogo}}"></image>
+            <image class="child_image" src="{{item.secondCategory.thumLogo}}">
             <view class="child_name">{{item.secondCategory.name}}</view>
           </navigator>
         </view>
@@ -101,7 +102,8 @@ import {
   SEL_CLASS_CODE
 } from '../utils/constant';
 
-import tip from '../utils/tip'
+import tip from '../utils/tip';
+
 
 export default class Classify extends wepy.page {
   config = {
@@ -114,11 +116,55 @@ export default class Classify extends wepy.page {
   data = {
     scrollTop: 100,
     windowHeight: 0,
-    list: {},
+    list: {
+
+    },
     //一级分类数据
-    rootcateList: {},
+    rootcateList: [{
+      code:1,
+      name:'待开发'
+    },
+    {
+      code:2,
+      name:'待开发'
+    },
+    {
+      code:3,
+      name:'衣物'
+    },
+    {
+      code:4,
+      name:'食物'
+    },
+    {
+      code:5,
+      name:'化妆品'
+    },
+    {
+      code:6,
+      name:'学习资料'
+    },
+
+    ],
+      
     //二级三级分类数据
-    childcateList: {}
+    childcateList:{
+      secondCategory:[{
+        thumLogo: "../src/icon/shouye.png",
+        code: 1,
+        name:'dfb'
+        },
+        {
+        thumLogo: "../icon/shouye.png",
+        code: 2,
+        name:'des'
+        }
+      ]
+    }
+
+    
+            
+  
   }
 
   async getChildCate(rootCateCode) {

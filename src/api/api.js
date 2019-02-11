@@ -1,6 +1,6 @@
 import {
   wxRequest
-} from '@/utils/wxRequest';
+} from '../utils/wxRequest';
 
 let env = "-test" //-dev 或者 -test
 const apiMall = 'https://sujiefs.com/'
