@@ -1,0 +1,74 @@
+<!--问答版块页面
+    以 scu_ 开头的页面及组件均在该项目中预览效果
+    该页面使用app.wpy引入的weui样式-->
+<template>
+  <view class="page">
+    <postList :postItems.sync="postItems"></postList>
+  </view>
+</template>
+<script>
+import wepy from 'wepy'
+import PostList from './../components/scu_postList'
+
+export default class extends wepy.page {
+  config = {
+    navigationBarTitleText: '问答'
+  }
+  data = {
+    postItems: [{
+      id: 1,
+      title: 'post1',
+      publishedDate: new Date(2015, 5, 19, 20, 15, 30, 123),
+      cover: 'none',
+      author: 'author1',
+      cate: 'cate1',
+      tags: ['tag1', 'tag2', 'tag3']
+    }, {
+      id: 2,
+      title: 'post2',
+      publishedDate: new Date(2015, 5, 20, 21, 16, 31, 123),
+      cover: 'none',
+      author: 'author2',
+      cate: 'cate2',
+      tags: ['tag4', 'tag3']
+    }, {
+      id: 3,
+      title: 'post3',
+      publishedDate: new Date(2015, 5, 21, 12, 24, 30, 123),
+      cover: 'none',
+      author: 'author3',
+      cate: 'cate3',
+      tags: ['tag5', 'tag2', 'tag3']
+    }, {
+      id: 4,
+      title: 'post4',
+      publishedDate: new Date(2015, 5, 21, 12, 24, 30, 123),
+      cover: 'none',
+      author: 'author3',
+      cate: 'cate3',
+      tags: ['tag5']
+    }, {
+      id: 5,
+      title: 'post5',
+      publishedDate: new Date(2015, 5, 21, 12, 24, 30, 123),
+      cover: 'none',
+      author: 'author3',
+      cate: 'cate3',
+      tags: ['tag5', 'tag3']
+    }]
+  }
+  methods = {
+  }
+  components = {
+    postList: PostList
+  }
+  onLoad() {
+    // 加载问题: loadMoreQuestions
+  }
+  loadMoreQuestions() {
+    /* 从后端获取问题列表存储到postList中 */
+  }
+}
+</script>
+<style>
+</style>
