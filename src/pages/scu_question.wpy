@@ -17,7 +17,7 @@ export default class extends wepy.page {
   data = {
     postItems: [{
       id: 1,
-      title: 'post1',
+      title: 'post1post1post1post1post1post1post1post1post1post1',
       publishedDate: new Date(2015, 5, 19, 20, 15, 30, 123),
       cover: 'none',
       author: 'author1',

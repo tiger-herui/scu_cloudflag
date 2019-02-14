@@ -7,21 +7,21 @@
       <navigator class="postitem" url="./../pages/scu_questionDetail?id={{ item.id }}">
         <view class="postitem_bd">
           <!--封面图片-->
-          <image 
-            class="postitem_cover"
-            wx:if="{{ item.cover && item.cover != 'none' }}"
-            src="{{ item.cover }}"
-            style='width:40%;height:100%;margin-right:15rpx;'
-            mode="aspectFill" />
-          <!--文字部分，包括标题、发布时间、分类、标签-->
-          <view class="postitem_text">
+          <view class="postitem_content">
+            <image 
+              class="postitem_cover"
+              wx:if="{{ item.cover && item.cover != 'none' }}"
+              src="{{ item.cover }}"
+              style='width:40%;height:100%;margin-right:15rpx;'
+              mode="aspectFill" />
+            <!--文字部分，包括标题、发布时间、分类、标签-->
             <view class="postitem_title">{{ item.title }}</view>
-            <view class="author">{{ item.author }}</view>
-            <repeat for="{{ item.tags }}" key="index_tag" index="index_tag" item="item_tag">
+            <!-- <view class="author">{{ item.author }}</view> -->
+            <!-- <repeat for="{{ item.tags }}" key="index_tag" index="index_tag" item="item_tag">
               <view class="tag">{{ item_tag }} </view>
-            </repeat>
-            <view class="cate">{{ item.cate }}</view>
-            <view class="postitem_post-time">{{ item.publishedDate }}</view>
+            </repeat> -->
+            <view class="cate">分类: {{ item.cate }}</view>
+            <view class="postitem_post-time">{{ publishedDateDisplayed[index] }}</view>
           </view>
         </view>
       </navigator>
@@ -44,6 +44,15 @@ export default class PostList extends wepy.component {
       twoWay: true
     }
   }
+  computed = {
+    publishedDateDisplayed: function() {
+      let self = this
+      if (self.postItems === []) {
+        return []
+      }
+      // 没写完
+    }
+  }
   methods = {
   }
   onLoad() {
@@ -62,38 +71,39 @@ export default class PostList extends wepy.component {
 }
 .postlist .postitem .postitem_bd {
   padding: 20rpx;
-  height: 200rpx;
+  height: auto;
   background-color: #fff;
-  border-bottom: 3rpx solid #eee;
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: flex;
-  -webkit-box-align: center;
-  -webkit-align-items: center;
-  align-items: center;
-  -webkit-box-flex: 0;
-  -webkit-flex: 0;
-  flex: 0;
+  margin-bottom: 15rpx;
+  // border-bottom: 3rpx solid #eee;
+
 }
-.postlist .postitem_bd .postitem_text {
+.postlist .postitem_bd .postitem_content {
   width: 100%;
-  display: -webkit-box;
-  display: -webkit-flex;
+  height: 100%;
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
+  flex-wrap: wrap;
+  justify-content: flex-start;
+  align-items: flex-start;
+  align-content: flex-start;
   .postitem_title {
-    width: 100%;
-    overflow: hidden;
     text-align: left;
-    margin-bottom: 10rpx;
-    font-size: 36rpx;
+    margin-bottom: 24rpx;
+    font-size: 48rpx;
+    flex-basis: 100%;
+    overflow: hidden;
+    overflow-wrap: break-word;
+  }
+  .cate {
+    color: #aaa;
+    flex-basis: 40%;
   }
   .postitem_post-time {
-    width: 100%;
-    overflow: hidden;
     text-align: right;
-    font-size: 28rpx;
+    font-size: 32rpx;
     color: #bbb;
+    flex-basis: 60%;
+    align-self: flex-end;
   }
 }
 </style>
