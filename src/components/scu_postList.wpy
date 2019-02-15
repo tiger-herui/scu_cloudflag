@@ -8,20 +8,22 @@
         <view class="postitem_bd">
           <!--封面图片-->
           <view class="postitem_content">
-            <image 
-              class="postitem_cover"
-              wx:if="{{ item.cover && item.cover != 'none' }}"
-              src="{{ item.cover }}"
-              style='width:40%;height:100%;margin-right:15rpx;'
-              mode="aspectFill" />
-            <!--文字部分，包括标题、发布时间、分类、标签-->
-            <view class="postitem_title">{{ item.title }}</view>
+            <!--帖子简介，包括标题、封面图片、发布时间、分类、标签-->
+            <view class="postitem_title {{ item.cover?'postitem_title-with-cover':'' }}">
+              {{ item.title }}
+            </view>
+            <view class="postitem_cover" wx:if="{{ item.cover && item.cover != 'none' }}">
+              <image 
+                src="{{ item.cover }}"
+                style='width:100%;height:100%;'
+                mode="aspectFill" />
+            </view>
             <!-- <view class="author">{{ item.author }}</view> -->
             <!-- <repeat for="{{ item.tags }}" key="index_tag" index="index_tag" item="item_tag">
               <view class="tag">{{ item_tag }} </view>
             </repeat> -->
-            <view class="cate">分类: {{ item.cate }}</view>
-            <view class="postitem_post-time">{{ publishedDateDisplayed[index] }}</view>
+            <view class="postitem_cate">分类: {{ item.cate }}</view>
+            <view class="postitem_post-time">{{ item.publishedDateDisplayed }}</view>
           </view>
         </view>
       </navigator>
@@ -45,13 +47,6 @@ export default class PostList extends wepy.component {
     }
   }
   computed = {
-    publishedDateDisplayed: function() {
-      let self = this
-      if (self.postItems === []) {
-        return []
-      }
-      // 没写完
-    }
   }
   methods = {
   }
@@ -85,25 +80,38 @@ export default class PostList extends wepy.component {
   flex-wrap: wrap;
   justify-content: flex-start;
   align-items: flex-start;
-  align-content: flex-start;
   .postitem_title {
     text-align: left;
     margin-bottom: 24rpx;
-    font-size: 48rpx;
+    font-size: 36rpx;
     flex-basis: 100%;
+    order: 0;
     overflow: hidden;
     overflow-wrap: break-word;
   }
-  .cate {
+  .postitem_title-with-cover {
+    flex-basis: 60%;
+    margin-right: 10rpx;
+  }
+  .postitem_cover {
+    height: 200rpx;
+    margin-bottom: 15rpx;
+    flex-basis: 30%;
+    flex-grow: 1;
+    order: 1;
+  }
+  .postitem_cate {
     color: #aaa;
     flex-basis: 40%;
+    font-size: 30rpx;
+    order: 2;
   }
   .postitem_post-time {
     text-align: right;
-    font-size: 32rpx;
+    font-size: 30rpx;
     color: #bbb;
     flex-basis: 60%;
-    align-self: flex-end;
+    order: 3;
   }
 }
 </style>
