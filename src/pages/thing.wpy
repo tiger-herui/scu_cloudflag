@@ -85,9 +85,9 @@
     </scroll-view>
     <scroll-view class="classify_detail" scroll-y scroll-with-animation="true" style="height:{{windowHeight-50}}px">
         <view class="children">
-          <navigator hover-class="none" class="children_item" wx:for="{{childcateList}}" wx:for-item="item" wx:key="index" url="/pages/search?cateCode={{item.secondCategory.code}}&title={{item.secondCategory.name}}">
-            <image class="child_image" src="{{item.secondCategory.thumLogo}}"/>
-            <view class="child_name">{{item.secondCategory.name}}</view>
+          <navigator hover-class="none" class="children_item" wx:for="{{childcateList}}" wx:for-item="item" wx:key="index" url="/pages/search?cateCode={{item.code}}&title={{item.name}}">
+            <image class="child_image" src="{{item.thumLogo}}"/>
+            <view class="child_name">{{item.name}}</view>
           </navigator>
         </view>
     </scroll-view>
@@ -105,9 +105,9 @@ import {
 import tip from '../utils/tip';
 
 
-export default class Classify extends wepy.page {
+export default class Thing extends wepy.page {
   config = {
-    navigationBarTitleText: '分类',
+    navigationBarTitleText: '百宝',
   }
   components = {
 
@@ -122,11 +122,11 @@ export default class Classify extends wepy.page {
     //一级分类数据
     rootcateList: [{
       code:1,
-      name:'待开发'
+      name:'生活'
     },
     {
       code:2,
-      name:'待开发'
+      name:'电子'
     },
     {
       code:3,
@@ -144,69 +144,63 @@ export default class Classify extends wepy.page {
       code:6,
       name:'学习资料'
     },
+    {
+      code:7,
+      name:'其他'
+    },
 
     ],
       
     //二级三级分类数据
-    childcateList:{
-      secondCategory:[{
-        thumLogo: "../src/icon/shouye.png",
-        code: 1,
-        name:'dfb'
-        },
-        {
-        thumLogo: "../icon/shouye.png",
-        code: 2,
-        name:'des'
-        }
-      ]
-    }
+    childcateList:[
+      
+    ],
 
     
             
   
   }
 
-  async getChildCate(rootCateCode) {
-    const json = await api.childGoodsCatetoryList({
-      query: {
-        rootCategoryCode: rootCateCode
-      }
-    });
-    if (json.data.code == 0) {
-      this.childcateList = json.data.list;
-    } else {
-      tip.error(json.data.msg);
+  //获取二级数据的函数定义
+  async fetchchildData(code){
+    this.childcateList = [
+      {
+        thumLogo:"../icon/jifen.png",
+        code:1,
+        name:'默认'
+      },
+    ]
+    if (code==1){
+      this.childcateList = [
+        {
+        thumLogo: "../icon/jifen.png",
+        code: 1,
+        name:'生活-1'
+      },
+      {
+        thumLogo: "../icon/shouye.png",
+        code: 2,
+        name:'生活-2'
+      },
+      ]
     }
-    this.$apply();
-  }
-
-  async getRootCateTopLevel() {
-    const json = await api.rootCtegoryList({
-      query: {}
-    });
-    if (json.data.code == 0) {
-      this.rootcateList = json.data.list;
-      if (this.rootcateList.length > 0) {
-        let selCode = wx.getStorageSync(SEL_CLASS_CODE);
-        var selRottCateCode = this.rootcateList[0].code;
-        if (selCode.length==0) {
-          this.rootcateList[0].active = true;
-        } else {
-          for (var i = 0; i < this.rootcateList.length; i++) {
-            if (selCode == this.rootcateList[i].code) {
-              selRottCateCode = this.rootcateList[i].code;
-              this.rootcateList[i].active = true;
-            }
-          }
-        }
-
-        this.getChildCate(selRottCateCode);
-      }
-    } else {
-      tip.error(json.data.msg);
+    else if (code==2){
+      this.childcateList = [
+        {
+        thumLogo: "../icon/shezhi.png",
+        code: 1,
+        name:'电子-1'
+      },
+      {
+        thumLogo: "../icon/shoucang.png",
+        code: 2,
+        name:'电子-2'
+      },
+      ]
     }
+    else {}
     this.$apply();
+
   }
 
   onLoad() {
@@ -227,7 +221,6 @@ export default class Classify extends wepy.page {
   methods = {
     changeCate(e) {
       let code = e.currentTarget.dataset.code;
-      this.getChildCate(code);
       wepy.setStorageSync(SEL_CLASS_CODE, code);
       //设置一级分类的选中状态
       for (var i = 0; i < this.rootcateList.length; i++) {
@@ -237,23 +230,10 @@ export default class Classify extends wepy.page {
           rootCate.active = true;
         }
       }
+      //通过传入code参数选择获取二级分类下的数据
+      this.fetchchildData(code);
     },
-    onShareAppMessage: function (res) {
-      if (res.from === 'button') {
-        // 来自页面内转发按钮
-        console.log(res.target)
-      }
-      return {
-        title: this.detail.name,
-        path: '/pages/classify',
-        success: function(res) {
-          // 转发成功
-        },
-        fail: function(res) {
-          // 转发失败
-        }
-      }
-    }
+    
   }
   events = {
 

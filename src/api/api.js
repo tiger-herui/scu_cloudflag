@@ -136,9 +136,9 @@ const refundApply = (params) => wxRequest(params, apiMall + '/api/mall/refund/sa
 
 //商品分类--begin
 //一级分类
-const rootCtegoryList = (params) => wxRequest(params, apiMall + '/api/mall/rootCtegoryList');
+const rootCategoryList = (params) => wxRequest(params, apiMall + '/api/mall/rootCtegoryList');
 //二级三级分类
-const childGoodsCatetoryList = (params) => wxRequest(params, apiMall + '/api/mall/childGoodsCatetoryList');
+const childGoodsCategoryList = (params) => wxRequest(params, apiMall + '/api/mall/childGoodsCatetoryList');
 //商品分类--end
 
 //查询广告列表
@@ -181,8 +181,8 @@ export default {
   getMyOrderList,
   saveByCart,
   toPay,
-  rootCtegoryList,
-  childGoodsCatetoryList,
+  rootCategoryList,
+  childGoodsCategoryList,
   getOrderInfo,
   editOrderInfo,
   goodsUserOrderList,
