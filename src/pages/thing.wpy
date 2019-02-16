@@ -79,7 +79,7 @@
   </view>
   <view class="classify" style="height:{{windowHeight-50}}px">
     <scroll-view class="classify_catetory" scroll-y scroll-with-animation="true" style="height:{{windowHeight-50}}px">
-      <view class="name {{item.active? 'active':''}}" wx:for="{{rootcateList}}" wx:key="item" @tap="changeCate" data-code="{{item.code}}">
+      <view class="name {{item.active? 'active':''}}" wx:for="{{rootcateList}}" data-index="{{index}}" wx:key="item" @tap="changeCate" data-code="{{item.code}}">
         {{item.name}}
       </view>
     </scroll-view>
@@ -121,50 +121,71 @@ export default class Classify extends wepy.page {
     },
     //一级分类数据
     rootcateList: [{
+      code:0,
+      name:'生活'
+    },
+    {
       code:1,
-      name:'待开发'
+      name:'电子'
     },
     {
       code:2,
-      name:'待开发'
-    },
-    {
-      code:3,
       name:'衣物'
     },
     {
-      code:4,
+      code:3,
       name:'食物'
     },
     {
-      code:5,
+      code:4,
       name:'化妆品'
     },
     {
+      code:5,
+      name:'学习相关'
+    },
+    {
       code:6,
-      name:'学习资料'
+      name:'还有其他'
     },
 
     ],
       
     //二级三级分类数据
-    childcateList:{
-      secondCategory:[{
+    childcateList:[
+      {
+      secondCategory:{
+        item:0,
+        thumLogo: "../src/icon/shouye.png",
+        code: 0,
+        name:'的v'
+        }
+      },
+      {
+      secondCategory:{
+        item:1,
+        thumLogo: "../src/icon/shouye.png",
+        code: 0,
+        name:'dfb'
+        }
+      },
+      {
+      
+      secondCategory:{
         thumLogo: "../src/icon/shouye.png",
         code: 1,
         name:'dfb'
-        },
-        {
-        thumLogo: "../icon/shouye.png",
-        code: 2,
-        name:'des'
         }
-      ]
-    }
-
-    
-            
-  
+      },
+      {
+      secondCategory:{
+        thumLogo: "../src/icon/shouye.png",
+        code: 1,
+        name:'其他'
+        }
+      }
+    ]
+   
   }
 
   async getChildCate(rootCateCode) {
