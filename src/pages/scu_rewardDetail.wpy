@@ -22,7 +22,7 @@ import wepy from 'wepy'
 
 export default class extends wepy.page {
   config = {
-    navigationBarTitleText: '问题'
+    navigationBarTitleText: '悬赏详情'
   }
   data = {
     id: NaN,

@@ -9,7 +9,8 @@ export default class extends wepy.app {
       'pages/index',
       'pages/user',
       'pages/thing',
-      'pages/que',
+      'pages/scu_reward',
+      'pages/scu_rewardDetail',
       'pages/points',
       'pages/message',
       'pages/setting',
@@ -39,8 +40,8 @@ export default class extends wepy.app {
           selectedIconPath:"icon/baibao2.png"
         },
         {
-          pagePath: "pages/que",
-          text: "问答",
+          pagePath: "pages/scu_reward",
+          text: "悬赏",
           iconPath:"icon/wenda.png",
           selectedIconPath:"icon/wenda2.png"
         },

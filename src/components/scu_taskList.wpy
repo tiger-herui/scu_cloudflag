@@ -1,29 +1,31 @@
-<!--帖子列表组件
+<!--任务列表组件
     以 scu_ 开头的页面及组件均在该项目中预览效果
     该组件使用app.wpy引入的weui样式-->
 <template>
-  <scroll-view class="postlist" scroll-y="true">
-    <repeat for="{{ postItems }}" key="index" index="index" item="item">
-      <navigator class="postitem" url="./../pages/scu_questionDetail?id={{ item.id }}">
-        <view class="postitem_bd">
-          <!--封面图片-->
-          <view class="postitem_content">
-            <!--帖子简介，包括标题、封面图片、发布时间、分类、标签-->
-            <view class="postitem_title {{ item.cover?'postitem_title-with-cover':'' }}">
+  <scroll-view class="tasklist" scroll-y="true">
+    <repeat for="{{ taskItems }}" key="index" index="index" item="item">
+      <navigator class="taskitem" url="./../pages/scu_rewardDetail?id={{ item.id }}">
+        <view class="taskitem_bd">
+          <!-- 一个表示任务状态的图标，效果类似图章，放置在内容部分的左上角 -->
+          <view class="taskitem_status">
+            <image 
+              src="{{ item.cover }}"
+              style='width:100%;height:100%;'
+              mode="aspectFill" />
+          </view>
+          <view class="taskitem_content">
+            <!--任务简介，包括标题、发布人、封面图片、有效时间、类型-->
+            <view class="taskitem_title {{ item.cover?'taskitem_title-with-cover':'' }}">
               {{ item.title }}
             </view>
-            <view class="postitem_cover" wx:if="{{ item.cover && item.cover != 'none' }}">
+            <view class="taskitem_cover" wx:if="{{ item.cover && item.cover != 'none' }}">
               <image 
                 src="{{ item.cover }}"
                 style='width:100%;height:100%;'
                 mode="aspectFill" />
             </view>
-            <!-- <view class="author">{{ item.author }}</view> -->
-            <!-- <repeat for="{{ item.tags }}" key="index_tag" index="index_tag" item="item_tag">
-              <view class="tag">{{ item_tag }} </view>
-            </repeat> -->
-            <view class="postitem_cate">分类: {{ item.cate }}</view>
-            <view class="postitem_post-time">{{ item.publishedDateDisplayed }}</view>
+            <view class="taskitem_cate">{{ item.cate }}</view>
+            <view class="taskitem_task-date">{{ item.taskDateDisplayed }}</view>
           </view>
         </view>
       </navigator>
@@ -38,9 +40,9 @@
 <script>
 import wepy from 'wepy'
 
-export default class PostList extends wepy.component {
+export default class TaskList extends wepy.component {
   props = {
-    postItems: {
+    taskItems: {
       type: Object,
       default: [],
       twoWay: true
@@ -51,28 +53,35 @@ export default class PostList extends wepy.component {
   methods = {
   }
   onLoad() {
-    // console.log(typeof this.postItems)
+    // console.log(typeof this.taskItems)
   }
 }
 </script>
 
 <style lang="less">
-.postlist {
+.tasklist {
   height: 100%;
   width: 100%;
-  .postitem {
+  .taskitem {
     width: 100%;
   }
 }
-.postlist .postitem .postitem_bd {
+.tasklist .taskitem .taskitem_bd {
   padding: 20rpx;
   height: auto;
   background-color: #fff;
   margin-bottom: 15rpx;
   // border-bottom: 3rpx solid #eee;
-
+  .taskitem_status {
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 160rpx;
+    width: 160rpx;
+  }
 }
-.postlist .postitem_bd .postitem_content {
+.tasklist .taskitem_bd .taskitem_content {
+  position:relative;
   width: 100%;
   height: 100%;
   display: flex;
@@ -80,7 +89,7 @@ export default class PostList extends wepy.component {
   flex-wrap: wrap;
   justify-content: flex-start;
   align-items: flex-start;
-  .postitem_title {
+  .taskitem_title {
     text-align: left;
     margin-bottom: 24rpx;
     font-size: 36rpx;
@@ -89,28 +98,29 @@ export default class PostList extends wepy.component {
     overflow: hidden;
     overflow-wrap: break-word;
   }
-  .postitem_title-with-cover {
+  .taskitem_title-with-cover {
     flex-basis: 60%;
     margin-right: 10rpx;
   }
-  .postitem_cover {
+  .taskitem_cover {
     height: 200rpx;
     margin-bottom: 15rpx;
     flex-basis: 30%;
     flex-grow: 1;
     order: 1;
   }
-  .postitem_cate {
+  .taskitem_cate {
     color: #aaa;
-    flex-basis: 40%;
+    flex-basis: 20%;
     font-size: 30rpx;
     order: 2;
   }
-  .postitem_post-time {
+  .taskitem_task-date {
     text-align: right;
     font-size: 30rpx;
     color: #bbb;
-    flex-basis: 60%;
+    flex-basis: 50%;
+    flex-grow: 1;
     order: 3;
   }
 }

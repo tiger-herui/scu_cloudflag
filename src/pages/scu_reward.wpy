@@ -1,0 +1,131 @@
+<!--悬赏版块页面
+    以 scu_ 开头的页面及组件均在该项目中预览效果
+    该页面使用app.wpy引入的weui样式-->
+<template>
+  <view class="page">
+    <taskList :taskItems.sync="taskItems"></taskList>
+  </view>
+</template>
+<script>
+import wepy from 'wepy'
+import TaskList from './../components/scu_taskList'
+
+export default class extends wepy.page {
+  config = {
+    navigationBarTitleText: '悬赏'
+  }
+  data = {
+    taskItems: [{
+      id: 1,
+      title: '属性定义了在分配多余空间之前，项目占据',
+      startDate: new Date(2015, 5, 19, 20, 15, 30, 123),
+      empiredDate: new Date(),
+      taskDateDisplayed: '',
+      cover: '../images/me.png',
+      author: 'author1',
+      cate: 'cate1',
+      status: 0   // 0: 可接受, 1: 已接受, 2: 已失效, 3: 未开始
+    }, {
+      id: 2,
+      title: 'task2',
+      startDate: new Date(2019, 1, 15, 21, 16, 31, 123),
+      empiredDate: new Date(),
+      taskDateDisplayed: '',
+      cover: '',
+      author: 'author2',
+      cate: 'cate2',
+      status: 1
+    }, {
+      id: 3,
+      title: 'task3',
+      startDate: new Date(2015, 5, 21, 12, 24, 30, 123),
+      empiredDate: new Date(),
+      taskDateDisplayed: '',
+      cover: '',
+      author: 'author3',
+      cate: 'cate3',
+      status: 2
+    }, {
+      id: 4,
+      title: 'task4',
+      startDate: new Date(2019, 5, 21, 12, 24, 30, 123),
+      empiredDate: new Date(),
+      taskDateDisplayed: '',
+      cover: '',
+      author: 'author3',
+      cate: 'cate3',
+      status: 3
+    }, {
+      id: 5,
+      title: 'task5',
+      startDate: new Date(2015, 5, 21, 12, 24, 30, 123),
+      empiredDate: new Date(),
+      taskDateDisplayed: '',
+      cover: '',
+      author: 'author3',
+      cate: 'cate3',
+      status: 0
+    }]
+  }
+  methods = {
+  }
+  components = {
+    taskList: TaskList
+  }
+  onLoad() {
+    let self = this
+    // 加载问题: loadMoreQuestions
+    self.addTaskDateDisplayed()
+  }
+  onReachBottom() {
+    let self = this
+    self.loadMoreQuestions()
+  }
+  addTaskDateDisplayed() {
+    /**
+     * 为页面数据的taskItems的每一项添加“显示的任务有效时间”属性
+     */
+    let self = this
+    let now = new Date()
+    for (let i = 0; i < self.taskItems.length; i++) {
+      if (self.taskItems[i].taskDateDisplayed) {
+        continue
+      } else if (self.taskItems[i].empiredDate && self.taskItems[i].startDate) {
+        let task = self.taskItems[i]
+        let startDate = task.startDate
+        let empiredDate = task.empiredDate
+        let taskEmpiredToday = false
+        task.taskDateDisplayed = ''
+        // 开始时间
+        if (startDate.getFullYear() !== now.getFullYear()) {
+          task.taskDateDisplayed += startDate.getFullYear() + '-'
+        }
+        if (startDate.toDateString() === now.toDateString()) {
+          task.taskDateDisplayed += '今天'
+          taskEmpiredToday = true
+        } else {
+          task.taskDateDisplayed += (startDate.getMonth() + 1) + '-' + startDate.getDate() + ' '
+        }
+        task.taskDateDisplayed += startDate.getHours() + ':' + startDate.getMinutes() + '——'
+        // 截止时间
+        if (empiredDate.getFullYear() !== startDate.getFullYear()) {
+          task.taskDateDisplayed += empiredDate.getFullYear() + '-'
+        }
+        if (empiredDate.toDateString() !== startDate.toDateString()) {
+          if (!taskEmpiredToday) {
+            task.taskDateDisplayed += (empiredDate.getMonth() + 1) + '-' + empiredDate.getDate() + ' '
+          }
+        }
+        task.taskDateDisplayed += empiredDate.getHours() + ':' + empiredDate.getMinutes()
+      }
+    }
+  }
+  loadMoreQuestions() {
+    let self = this
+    /* 从后端获取问题列表存储到taskList中 */
+    self.addTaskDateDisplayed()
+  }
+}
+</script>
+<style>
+</style>
