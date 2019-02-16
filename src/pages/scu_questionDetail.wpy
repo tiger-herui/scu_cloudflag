@@ -1,0 +1,55 @@
+<!--问答详情页面
+    以 scu_ 开头的页面及组件均在该项目中预览效果
+    该页面使用app.wpy引入的weui样式-->
+<template>
+  <view class="page">
+    <!--文章头部，包括标题、作者、时间、标签、（分类）-->
+    <view class="page__hd">
+      <view class="page__title">{{ title }}</view>
+      <view class="page__desc">{{ author }}-{{ publishedDate }}</view>
+    </view>
+    <!--文章内容（最好用一个组件解析），暂时用个view占位-->
+    <view class="page__bd">
+      <view class="weui-article">
+        <view class="weui-article__section">{{ content }}</view>
+      </view>
+    </view>
+  </view>
+</template>
+
+<script>
+import wepy from 'wepy'
+
+export default class extends wepy.page {
+  config = {
+    navigationBarTitleText: '问题'
+  }
+  data = {
+    id: NaN,
+    title: '测试数据ABCabc!@#——',
+    author: '测试数据ABCabc!@#——',
+    publishedDate: new Date(),
+    cate: '测试数据ABCabc!@#——',
+    tags: ['测试数据ABCabc!@#——', '测试数据ABCabc!@#——'],
+    content: '测试数据ABCabc!@#——\n测试数据ABCabc!@#——\n测试数据ABCabc!@#——\n'
+  }
+  components = {
+    // 一个解析富文本（或者只是带图片标签的文本）的组件
+  }
+  methods = {
+  }
+  onLoad(options) {
+    let self = this
+    self.id = options.id
+    // 从数据库请求问答数据
+  }
+}
+</script>
+<style>
+page{
+    background-color: #FFFFFF;
+}
+image{
+    margin: 4px 0;
+}
+</style>

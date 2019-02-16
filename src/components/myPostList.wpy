@@ -1,0 +1,93 @@
+<!--帖子列表组件-->
+<template>
+  <scroll-view class="postlist" scroll-y="true">
+    <repeat for="{{ postItems }}" key="index" index="index" item="item">
+      <navigator class="postitem" url="/pages/postDetail?index={{ item.index }}">
+        <view class="postitem_bd">
+          <image 
+            class="postitem_cover"
+            wx:if="{{ item.cover && item.cover != 'none' }}"
+            src="{{ item.cover }}"
+            style='width:40%;height:100%;margin-right:15rpx;'
+            mode="aspectFill" />
+          <view class="postitem_text">
+            <view class="postitem_title">{{ item.title }}</view>
+            <view class="postitem_post-time">{{ item.publishedDate }}</view>
+          </view>
+        </view>
+      </navigator>
+    </repeat>
+    <view class="tips">
+      <!-- <image src="../images/loading.gif" style='width:42rpx;height:42rpx;'/> -->
+      <text style='font-size:36rpx;color:#888'>加载中...</text>
+    </view>
+  </scroll-view>
+</template>
+
+<script>
+import wepy from 'wepy'
+
+export default class PostList extends wepy.component {
+  props = {
+    postItems: {
+      type: Object,
+      default: [],
+      // twoWay: true
+    }
+  }
+  methods = {
+  }
+  onLoad() {
+    // console.log(typeof this.postItems)
+  }
+}
+</script>
+
+<style lang="less">
+.postlist {
+  height: 100%;
+  width: 100%;
+  .postitem {
+    width: 100%;
+    .postitem_bd {
+      padding: 20rpx;
+      height: 200rpx;
+      background-color: #fff;
+      border-bottom: 3rpx solid #eee;
+      display: -webkit-box;
+      display: -webkit-flex;
+      display: flex;
+      -webkit-box-align: center;
+      -webkit-align-items: center;
+      align-items: center;
+      -webkit-box-flex: 0;
+      -webkit-flex: 0;
+      flex: 0;
+    }
+  }
+  .tips {
+    text-align: center;
+  }
+}
+.postlist .postitem_bd .postitem_text {
+  width: 100%;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: flex;
+  flex-direction: column;
+  .postitem_title {
+    width: 100%;
+    overflow: hidden;
+    text-align: left;
+    margin-bottom: 10rpx;
+    font-size: 36rpx;
+  }
+  .postitem_post-time {
+    width: 100%;
+    overflow: hidden;
+    text-align: right;
+    font-size: 28rpx;
+    color: #bbb;
+  }
+}
+</style>

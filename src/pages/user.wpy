@@ -66,7 +66,7 @@
     <!-- 头像 -->
     <view class="header">
       <view class="header_content">
-        <image class="avatarUrl" src="{{avatarUrl}}">
+        <image class="avatarUrl" src="{{avatarUrl}}"/>
         <view class="nickName cfff">{{nickName}}</view>
       </view>
     </view>
@@ -75,7 +75,7 @@
       <navigator class="item" url="/pages/register" wx:if="{{bShowBind}}">
         <view>
           <view class="item_content">
-            <image class="item_img" src="../images/icon_my_01.png">
+            <image class="item_img" src="../images/icon_my_01.png"/>
             <view class="text" style="color:#fe2a2a">绑定手机号</view>
           </view>
           <view class="tip">绑定手机号可更好的让我们服务好您！</view>
@@ -84,28 +84,28 @@
       </navigator>
       <navigator class="item" url="../pages/order">
         <view class="item_content">
-          <image class="item_img" src="../icon/dingdan.png">
+          <image class="item_img" src="../icon/dingdan.png"/>
           <view class="text">我的订单</view>
         </view>
         <view class="arrow">&gt;</view>
       </navigator>
       <navigator class="item" url="/pages/points">
         <view class="item_content">
-          <image class="item_img" src="../icon/jifen.png">
+          <image class="item_img" src="../icon/jifen.png"/>
           <view class="text">我的积分</view>
         </view>
         <view class="arrow">&gt;</view>
       </navigator>
       <navigator class="item" url="/pages/collection?type=0">
         <view class="item_content">
-          <image class="item_img" src="../icon/zuji.png">
+          <image class="item_img" src="../icon/zuji.png"/>
           <view class="text">我的足迹</view>
         </view>
         <view class="arrow">&gt;</view>
       </navigator>
       <navigator class="item" url="/pages/collection?type=1">
         <view class="item_content">
-          <image class="item_img" src="../icon/shoucang.png">
+          <image class="item_img" src="../icon/shoucang.png"/>
           <view class="text">我的收藏</view>
         </view>
         <view class="arrow">&gt;</view>
@@ -114,14 +114,14 @@
     <view class="info_block">
       <navigator class="item" url="/pages/message">
         <view class="item_content">
-          <image class="item_img" src="../icon/xiaoxi.png">
+          <image class="item_img" src="../icon/xiaoxi.png"/>
           <view class="text">我的消息</view>
         </view>
         <view class="arrow">&gt;</view>
       </navigator>
       <navigator class="item" url="/pages/setting">
         <view class="item_content">
-          <image class="item_img" src="../icon/shezhi.png">
+          <image class="item_img" src="../icon/shezhi.png"/>
           <view class="text">设置</view>
         </view>
         <view class="arrow">&gt;</view>

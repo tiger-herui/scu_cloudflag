@@ -1,0 +1,113 @@
+<!--问答版块页面
+    以 scu_ 开头的页面及组件均在该项目中预览效果
+    该页面使用app.wpy引入的weui样式-->
+<template>
+  <view class="page">
+    <postList :postItems.sync="postItems"></postList>
+  </view>
+</template>
+<script>
+import wepy from 'wepy'
+import PostList from './../components/scu_postList'
+
+export default class extends wepy.page {
+  config = {
+    navigationBarTitleText: '问答'
+  }
+  data = {
+    postItems: [{
+      id: 1,
+      title: '属性定义了在分配多余空间之前，项目占据',
+      publishedDate: new Date(2015, 5, 19, 20, 15, 30, 123),
+      publishedDateDisplayed: '',
+      cover: '../images/me.png',
+      author: 'author1',
+      cate: 'cate1',
+      tags: ['tag1', 'tag2', 'tag3']
+    }, {
+      id: 2,
+      title: 'post2',
+      publishedDate: new Date(2019, 1, 15, 21, 16, 31, 123),
+      publishedDateDisplayed: '',
+      cover: '',
+      author: 'author2',
+      cate: 'cate2',
+      tags: ['tag4', 'tag3']
+    }, {
+      id: 3,
+      title: 'post3',
+      publishedDate: new Date(2015, 5, 21, 12, 24, 30, 123),
+      publishedDateDisplayed: '',
+      cover: '',
+      author: 'author3',
+      cate: 'cate3',
+      tags: ['tag5', 'tag2', 'tag3']
+    }, {
+      id: 4,
+      title: 'post4',
+      publishedDate: new Date(2019, 5, 21, 12, 24, 30, 123),
+      publishedDateDisplayed: '',
+      cover: '',
+      author: 'author3',
+      cate: 'cate3',
+      tags: ['tag5']
+    }, {
+      id: 5,
+      title: 'post5',
+      publishedDate: new Date(2015, 5, 21, 12, 24, 30, 123),
+      publishedDateDisplayed: '',
+      cover: '',
+      author: 'author3',
+      cate: 'cate3',
+      tags: ['tag5', 'tag3']
+    }]
+  }
+  methods = {
+  }
+  components = {
+    postList: PostList
+  }
+  onLoad() {
+    let self = this
+    // 加载问题: loadMoreQuestions
+    self.addPublishedDateDisplayed()
+  }
+  onReachBottom() {
+    let self = this
+    self.loadMoreQuestions()
+  }
+  addPublishedDateDisplayed() {
+    /**
+     * 为页面数据的postItems的每一项添加“显示的发布日期”属性
+     */
+    let self = this
+    let now = new Date()
+    console.log(now.getFullYear())
+    for (let i = 0; i < self.postItems.length; i++) {
+      if (self.postItems[i].publishedDateDisplayed) {
+        continue
+      } else if (self.postItems[i].publishedDate) {
+        let publishedDate = self.postItems[i].publishedDate
+        self.postItems[i].publishedDateDisplayed = ''
+        if (publishedDate.toDateString() === now.toDateString()) {  // 发布日期与现在同天
+          self.postItems[i].publishedDateDisplayed +=
+            publishedDate.getHours() + ':' + publishedDate.getMinutes()
+          continue
+        } else if (now.getFullYear() !== publishedDate.getFullYear()) {  // 发布日期与现在不同年
+          self.postItems[i].publishedDateDisplayed +=
+            publishedDate.getFullYear() + '-'
+        }
+        self.postItems[i].publishedDateDisplayed +=
+          (publishedDate.getMonth() + 1) + '-' + publishedDate.getDate()
+      }
+    }
+  }
+  loadMoreQuestions() {
+    let self = this
+    /* 从后端获取问题列表存储到postList中 */
+    self.addPublishedDateDisplayed()
+  }
+}
+</script>
+<style>
+</style>

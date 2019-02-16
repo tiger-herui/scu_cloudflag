@@ -46,8 +46,8 @@
       margin: 20rpx 0rpx;
     }
     .child_image {
-      width: 60px;
-      height: 60px;
+      width: 50px;
+      height: 50px;
     }
     .child_name {
       font-size: 26rpx;
@@ -85,9 +85,9 @@
     </scroll-view>
     <scroll-view class="classify_detail" scroll-y scroll-with-animation="true" style="height:{{windowHeight-50}}px">
         <view class="children">
-          <navigator hover-class="none" class="children_item" wx:for="{{childcateList}}" wx:for-item="item" wx:key="index" url="/pages/search?cateCode={{item.secondCategory.code}}&title={{item.secondCategory.name}}">
-            <image class="child_image" src="{{item.secondCategory.thumLogo}}">
-            <view class="child_name">{{item.secondCategory.name}}</view>
+          <navigator hover-class="none" class="children_item" wx:for="{{childcateList}}" wx:for-item="item" wx:key="index" url="/pages/search?cateCode={{item.code}}&title={{item.name}}">
+            <image class="child_image" src="{{item.thumLogo}}"/>
+            <view class="child_name">{{item.name}}</view>
           </navigator>
         </view>
     </scroll-view>
@@ -105,9 +105,9 @@ import {
 import tip from '../utils/tip';
 
 
-export default class Classify extends wepy.page {
+export default class Thing extends wepy.page {
   config = {
-    navigationBarTitleText: '分类',
+    navigationBarTitleText: '百宝',
   }
   components = {
 
@@ -122,11 +122,11 @@ export default class Classify extends wepy.page {
     //一级分类数据
     rootcateList: [{
       code:0,
-      name:'生活'
+      name:'电子'
     },
     {
       code:1,
-      name:'电子'
+      name:'食物'
     },
     {
       code:2,
@@ -134,100 +134,182 @@ export default class Classify extends wepy.page {
     },
     {
       code:3,
-      name:'食物'
-    },
-    {
-      code:4,
       name:'化妆品'
     },
     {
-      code:5,
+      code:4,
       name:'学习相关'
     },
     {
-      code:6,
+      code:5,
       name:'还有其他'
-    },
-
+    }
+   
     ],
       
     //二级三级分类数据
-    childcateList:[
+    childcateList:[ 
       {
-      secondCategory:{
-        item:0,
-        thumLogo: "../src/icon/shouye.png",
-        code: 0,
-        name:'的v'
-        }
+        thumLogo:"../icon/thing/erji.png",
+        code:1,
+        name:'耳机'
       },
       {
-      secondCategory:{
-        item:1,
-        thumLogo: "../src/icon/shouye.png",
-        code: 0,
-        name:'dfb'
-        }
+        thumLogo:"../icon/thing/jianpan.png",
+        code:2,
+        name:'键盘'
       },
       {
-      
-      secondCategory:{
-        thumLogo: "../src/icon/shouye.png",
-        code: 1,
-        name:'dfb'
-        }
-      },
-      {
-      secondCategory:{
-        thumLogo: "../src/icon/shouye.png",
-        code: 1,
+        thumLogo:"../icon/thing/qita-1.png",
+        code:3,
         name:'其他'
-        }
-      }
+      },
+    ],     
+  
+  }
+
+  //获取二级数据的函数定义
+  async fetchchildData(code){
+    this.childcateList = [
+      {
+        thumLogo:"../icon/thing/erji.png",
+        code:1,
+        name:'耳机'
+      },
+      {
+        thumLogo:"../icon/thing/jianpan.png",
+        code:2,
+        name:'键盘'
+      },
+      {
+        thumLogo:"../icon/thing/qita-1.png",
+        code:3,
+        name:'其他'
+      },
     ]
-   
-  }
-
-  async getChildCate(rootCateCode) {
-    const json = await api.childGoodsCatetoryList({
-      query: {
-        rootCategoryCode: rootCateCode
-      }
-    });
-    if (json.data.code == 0) {
-      this.childcateList = json.data.list;
-    } else {
-      tip.error(json.data.msg);
+    if (code==1){
+      this.childcateList = [
+        {
+        thumLogo: "../icon/thing/lingshi.png",
+        code: 1,
+        name:'零食'
+      },
+      {
+        thumLogo: "../icon/thing/yinping.png",
+        code: 2,
+        name:'饮品'
+      },
+      {
+        thumLogo:"../icon/thing/daijinquan.png",
+        code:3,
+        name:'代金券'
+      },
+      {
+        thumLogo:"../icon/thing/qita-2.png",
+        code:4,
+        name:'其他'
+      },
+      ]
     }
-    this.$apply();
-  }
-
-  async getRootCateTopLevel() {
-    const json = await api.rootCtegoryList({
-      query: {}
-    });
-    if (json.data.code == 0) {
-      this.rootcateList = json.data.list;
-      if (this.rootcateList.length > 0) {
-        let selCode = wx.getStorageSync(SEL_CLASS_CODE);
-        var selRottCateCode = this.rootcateList[0].code;
-        if (selCode.length==0) {
-          this.rootcateList[0].active = true;
-        } else {
-          for (var i = 0; i < this.rootcateList.length; i++) {
-            if (selCode == this.rootcateList[i].code) {
-              selRottCateCode = this.rootcateList[i].code;
-              this.rootcateList[i].active = true;
-            }
-          }
-        }
-
-        this.getChildCate(selRottCateCode);
-      }
-    } else {
-      tip.error(json.data.msg);
+    else if (code==2){
+      this.childcateList = [
+        {
+        thumLogo: "../icon/thing/shangyi.png",
+        code: 1,
+        name:'上衣'
+      },
+      {
+        thumLogo: "../icon/thing/kuzi.png",
+        code: 2,
+        name:'裤子'
+      },
+      {
+        thumLogo:"../icon/thing/xie.png",
+        code:3,
+        name:'鞋'
+      },
+      {
+        thumLogo:"../icon/thing/bao.png",
+        code:4,
+        name:'包'
+      },
+      {
+        thumLogo:"../icon/thing/maozi.png",
+        code:5,
+        name:'帽子'
+      },
+      {
+        thumLogo:"../icon/thing/qita-3.png",
+        code:6,
+        name:'其他'
+      },
+      ]
     }
+    else if (code==3){
+      this.childcateList = [
+        {
+        thumLogo: "../icon/thing/kouhong.png",
+        code: 1,
+        name:'口红'
+      },
+      {
+        thumLogo: "../icon/thing/fendi.png",
+        code: 2,
+        name:'粉底'
+      },
+      {
+        thumLogo:"../icon/thing/yanying.png",
+        code:3,
+        name:'眼影'
+      },
+      {
+        thumLogo:"../icon/thing/qita-4.png",
+        code:4,
+        name:'其他'
+      },
+      ]
+    }
+    else if (code==4){
+      this.childcateList = [
+        {
+        thumLogo: "../icon/thing/jiaocai.png",
+        code: 1,
+        name:'教材'
+      },
+      {
+        thumLogo: "../icon/thing/kaoyan.png",
+        code: 2,
+        name:'考研'
+      },
+      {
+        thumLogo:"../icon/thing/siliuji.png",
+        code:3,
+        name:'四六级'
+      },
+      {
+        thumLogo:"../icon/thing/xuni.png",
+        code:4,
+        name:'虚拟资源'
+      },
+      {
+        thumLogo:"../icon/thing/qita-5.png",
+        code:5,
+        name:'其他'
+      },
+      ]
+    }
+   else if (code==5){
+      this.childcateList = [
+        {
+        thumLogo: "../icon/thing/chuansong.png",
+        code: 1,
+        name:'传送门'
+      },
+      ]
+   }
+    else {}
     this.$apply();
+
   }
 
   onLoad() {
@@ -248,7 +330,6 @@ export default class Classify extends wepy.page {
   methods = {
     changeCate(e) {
       let code = e.currentTarget.dataset.code;
-      this.getChildCate(code);
       wepy.setStorageSync(SEL_CLASS_CODE, code);
       //设置一级分类的选中状态
       for (var i = 0; i < this.rootcateList.length; i++) {
@@ -258,23 +339,10 @@ export default class Classify extends wepy.page {
           rootCate.active = true;
         }
       }
+      //通过传入code参数选择获取二级分类下的数据
+      this.fetchchildData(code);
     },
-    onShareAppMessage: function (res) {
-      if (res.from === 'button') {
-        // 来自页面内转发按钮
-        console.log(res.target)
-      }
-      return {
-        title: this.detail.name,
-        path: '/pages/classify',
-        success: function(res) {
-          // 转发成功
-        },
-        fail: function(res) {
-          // 转发失败
-        }
-      }
-    }
+    
   }
   events = {
 
