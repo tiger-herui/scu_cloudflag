@@ -1,0 +1,45 @@
+<template>
+  <view class="hoverbtn" @tap="onHoverbtnTap">
+    <view class="hoverbtn_icon">
+      <image src="" style="height:100%;width:100%;"/>
+    </view>
+  </view>
+</template>
+
+<script>
+import wepy from 'wepy'
+
+export default class Hoverbtn extends wepy.component {
+  props = {
+    postUrl: {
+      type: String,
+      default: ''
+    }
+  }
+  methods = {
+    onHoverbtnTap() {
+      let self = this
+      wx.navigateTo(self.postUrl)
+    }
+  }
+}
+</script> 
+
+<style lang="less">
+.hoverbtn {
+  background-color: red;
+  position: fixed;
+  width: 80rpx;
+  height: 80rpx;
+  bottom: 60rpx;
+  right: 40rpx;
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  .hoverbtn_icon {
+    width: 40%;
+    height: 40%;
+  }
+}
+</style>

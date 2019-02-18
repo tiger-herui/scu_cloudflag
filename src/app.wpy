@@ -11,6 +11,7 @@ export default class extends wepy.app {
       'pages/thing',
       'pages/scu_reward',
       'pages/scu_rewardDetail',
+      'pages/scu_rewardPost',
       'pages/points',
       'pages/message',
       'pages/setting',

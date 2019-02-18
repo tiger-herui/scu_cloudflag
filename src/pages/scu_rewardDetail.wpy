@@ -3,16 +3,28 @@
     该页面使用app.wpy引入的weui样式-->
 <template>
   <view class="page">
-    <!--文章头部，包括标题、作者、时间、标签、（分类）-->
-    <view class="page__hd">
-      <view class="page__title">{{ title }}</view>
-      <view class="page__desc">{{ author }}-{{ publishedDate }}</view>
-    </view>
-    <!--文章内容（最好用一个组件解析），暂时用个view占位-->
-    <view class="page__bd">
-      <view class="weui-article">
-        <view class="weui-article__section">{{ content }}</view>
+    <scroll-view class="page__content" scroll-y="true">
+      <!--文章头部，包括标题、作者、时间、标签、（分类）-->
+      <view class="page__hd">
+        <view class="page__title">{{ title }}</view>
+        <view class="page__desc">
+          <view class="taskAuthor">发起者：{{ author }}</view>
+          <view class="taskDate">有效时间：{{ publishedDate }}</view>
+          <view class="taskCate">地点：{{ point }}</view>
+          <view class="rewards">酬劳：{{ rewards }}</view>
+        </view>
       </view>
+      <!--文章内容（最好用一个组件解析），暂时用个view占位-->
+      <view class="page__bd">
+        <view class="weui-article">
+          <view class="weui-article__section">{{ content }}</view>
+        </view>
+      </view>
+    </scroll-view>
+    <view class="page__ft">
+      <!--其中一个是接单按钮，一个预留。点击事件没写####-->
+      <button style="background-color:yellow;">按钮1</button>
+      <button style="background-color:green;">按钮2</button>
     </view>
   </view>
 </template>
@@ -29,9 +41,11 @@ export default class extends wepy.page {
     title: '测试数据ABCabc!@#——',
     author: '测试数据ABCabc!@#——',
     publishedDate: new Date(),
+    point: '江安',
+    rewards: '5元',
     cate: '测试数据ABCabc!@#——',
     tags: ['测试数据ABCabc!@#——', '测试数据ABCabc!@#——'],
-    content: '测试数据ABCabc!@#——\n测试数据ABCabc!@#——\n测试数据ABCabc!@#——\n'
+    content: '测试数据ABCabc!@#——测试数据ABCabc!@#——测试数据ABCabc!@#——测试数据ABCabc!@#——测试数据ABCabc!@#——测试数据ABCabc!@#——测试数据ABCabc!@#——测试数据ABCabc!@#——测试数据ABCabc!@#——测试数据ABCabc!@#——测试数据ABCabc!@#——测试数据ABCabc!@#——测试数据ABCabc!@#——测试数据ABCabc!@#——测试数据ABCabc!@#——测试数据ABCabc!@#——测试数据ABCabc!@#——测试数据ABCabc!@#——测试数据ABCabc!@#——测试数据ABCabc!@#——测试数据ABCabc!@#——测试数据ABCabc!@#——测试数据ABCabc!@#——测试数据ABCabc!@#——测试数据ABCabc!@#——测试数据ABCabc!@#——测试数据ABCabc!@#——测试数据ABCabc!@#——测试数据ABCabc!@#——测试数据ABCabc!@#——测试数据ABCabc!@#——测试数据ABCabc!@#——测试数据ABCabc!@#——测试数据ABCabc!@#——测试数据ABCabc!@#——测试数据ABCabc!@#——测试数据ABCabc!@#——测试数据ABCabc!@#——测试数据ABCabc!@#——测试数据ABCabc!@#——测试数据ABCabc!@#——测试数据ABCabc!@#——测试数据ABCabc!@#——测试数据ABCabc!@#——测试数据ABCabc!@#——测试数据ABCabc!@#——测试数据ABCabc!@#——测试数据ABCabc!@#——测试数据ABCabc!@#——测试数据ABCabc!@#——测试数据ABCabc!@#——测试数据ABCabc!@#——测试数据ABCabc!@#——测试数据ABCabc!@#——测试数据ABCabc!@#——测试数据ABCabc!@#——'
   }
   components = {
     // 一个解析富文本（或者只是带图片标签的文本）的组件
@@ -45,11 +59,35 @@ export default class extends wepy.page {
   }
 }
 </script>
-<style>
-page{
-    background-color: #FFFFFF;
-}
+<style lang="less">
+// @height: ;
 image{
-    margin: 4px 0;
+  margin: 4rpx 0;
+}
+.page {
+  height: calc(100vh);
+  width: calc(100vw);
+}
+.page__content {
+  height: 92%;
+  .page__hd {
+    margin-bottom: 15rpx;
+    padding: 30rpx;
+  }
+}
+.page__ft {
+  position: fixed;
+  bottom: 0rpx;
+  padding-bottom: 0;
+  height: 8%;
+  width: 100%;
+  display: flex;
+  button {
+    margin: 0;
+    height: 100%;
+    border: 0;
+    border-radius: 0;
+    flex-grow: 1;
+  }
 }
 </style>

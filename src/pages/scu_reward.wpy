@@ -3,18 +3,23 @@
     该页面使用app.wpy引入的weui样式-->
 <template>
   <view class="page">
-    <taskList :taskItems.sync="taskItems"></taskList>
+    <view class="page__bd">
+      <taskList :taskItems.sync="taskItems"></taskList>
+      <hoverBtn :postUrl="postUrl"></hoverBtn>
+    </view>
   </view>
 </template>
 <script>
 import wepy from 'wepy'
 import TaskList from './../components/scu_taskList'
+import HoverBtn from './../components/hover-button'
 
 export default class extends wepy.page {
   config = {
     navigationBarTitleText: '悬赏'
   }
   data = {
+    postUrl: './scu_rewardPost',
     taskItems: [{
       id: 1,
       title: '属性定义了在分配多余空间之前，项目占据',
@@ -70,7 +75,8 @@ export default class extends wepy.page {
   methods = {
   }
   components = {
-    taskList: TaskList
+    taskList: TaskList,
+    hoverBtn: HoverBtn
   }
   onLoad() {
     let self = this
