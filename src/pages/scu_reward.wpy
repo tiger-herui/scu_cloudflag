@@ -29,7 +29,7 @@ export default class extends wepy.page {
       cover: '../images/me.png',
       author: 'author1',
       cate: 'cate1',
-      status: 0   // 0: 可接受, 1: 已接受, 2: 已失效, 3: 未开始
+      status: 2   // 0: 可接受, 1: 已接受, 2: 已失效, 3: 未开始
     }, {
       id: 2,
       title: 'task2',

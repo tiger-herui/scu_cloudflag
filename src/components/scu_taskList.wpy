@@ -7,10 +7,10 @@
       <navigator class="taskitem" url="./../pages/scu_rewardDetail?id={{ item.id }}">
         <view class="taskitem_bd">
           <!-- 一个表示任务状态的图标，效果类似图章，放置在内容部分的左上角 -->
-          <view class="taskitem_status">
+          <view class="taskitem_status" wx:if="{{ item.status }}">
             <image 
-              src="{{ item.cover }}"
-              style='width:100%;height:100%;'
+              src="./../images/taskStatus{{ item.status }}.png"
+              style='width:100%;height:100%;opacity: 0.8;'
               mode="aspectFill" />
           </view>
           <view class="taskitem_content">
@@ -42,6 +42,12 @@ import wepy from 'wepy'
 
 export default class TaskList extends wepy.component {
   props = {
+    statusMarks: [
+      './../images/taskStatus0.png',
+      './../images/taskStatus1.png',
+      './../images/taskStatus2.png',
+      './../images/taskStatus3.png'
+    ],
     taskItems: {
       type: Object,
       default: [],
@@ -67,6 +73,8 @@ export default class TaskList extends wepy.component {
   }
 }
 .tasklist .taskitem .taskitem_bd {
+  position:relative;
+  overflow: hidden;
   padding: 20rpx;
   height: auto;
   background-color: #fff;
@@ -74,8 +82,8 @@ export default class TaskList extends wepy.component {
   // border-bottom: 3rpx solid #eee;
   .taskitem_status {
     position: absolute;
-    top: 0;
-    left: 0;
+    top: -30rpx;
+    left: -10rpx;
     height: 160rpx;
     width: 160rpx;
   }
