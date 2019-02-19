@@ -19,7 +19,9 @@ export default class Hoverbtn extends wepy.component {
   methods = {
     onHoverbtnTap() {
       let self = this
-      wx.navigateTo(self.postUrl)
+      wx.navigateTo({
+        url: self.postUrl
+      })
     }
   }
 }
