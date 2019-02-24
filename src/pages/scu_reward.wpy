@@ -11,7 +11,7 @@
         <view class="tab order" @tap="onOrderTap">排序</view>
       </view>
       <scroll-view class="tasklist" scroll-y="true">
-        <repeat for="{{ taskItems }}" key="index" index="index" item="item">
+        <repeat for="{{ taskItemsDisplayed }}" key="index" index="index" item="item">
           <navigator class="taskitem" url="./../pages/scu_rewardDetail?id={{ item.id }}">
             <view class="taskitem_bd">
               <!-- 一个表示任务状态的图标，效果类似图章，放置在内容部分的左上角 -->
@@ -78,6 +78,7 @@ export default class extends wepy.page {
       title: '属性定义了在分配多余空间之前，项目占据',
       startDate: new Date(2015, 5, 19, 20, 15, 30, 123),
       empiredDate: new Date(2019, 5, 19, 20, 15, 30, 123),
+      timeLeft: NaN,
       taskDateDisplayed: '',
       cover: '',
       author: 'author1',
@@ -91,6 +92,7 @@ export default class extends wepy.page {
       title: 'task2任务2任务2任务2任务2任务2任务2任务2任务2任务2任务2任务2任务2任务2任务2',
       startDate: new Date(2019, 1, 15, 21, 16, 31, 123),
       empiredDate: new Date(2019, 2, 19, 20, 15, 30, 123),
+      timeLeft: NaN,
       taskDateDisplayed: '',
       cover: '',
       author: 'author2',
@@ -104,6 +106,7 @@ export default class extends wepy.page {
       title: 'task3',
       startDate: new Date(2015, 5, 21, 12, 24, 30, 123),
       empiredDate: new Date(2019, 1, 21, 20, 15, 30, 123),
+      timeLeft: NaN,
       taskDateDisplayed: '',
       cover: '',
       author: 'author3',
@@ -117,6 +120,7 @@ export default class extends wepy.page {
       title: 'task4',
       startDate: new Date(2019, 5, 21, 12, 24, 30, 123),
       empiredDate: new Date(2019, 1, 21, 20, 15, 30, 123),
+      timeLeft: NaN,
       taskDateDisplayed: '',
       cover: '',
       author: 'author3',
@@ -130,6 +134,7 @@ export default class extends wepy.page {
       title: 'task5',
       startDate: new Date(2015, 5, 21, 12, 24, 30, 123),
       empiredDate: new Date(),
+      timeLeft: NaN,
       taskDateDisplayed: '',
       cover: '',
       author: 'author3',
@@ -138,7 +143,8 @@ export default class extends wepy.page {
       reward: '5元',
       tags: ['tag1', 'tag2'],
       status: 0
-    }]
+    }],
+    taskItemsDisplayed: []
   }
   methods = {
     onSearchTap() {
@@ -146,11 +152,49 @@ export default class extends wepy.page {
     },
     onOrderTap() {
       // 弹出单选菜单
+      let self = this
       wepy.showActionSheet({
         itemList: ['悬赏金额顺序', '悬赏金额逆序', '剩余时间顺序', '剩余时间逆序']
       })
       .then(function(res) {
-        console.log(res)
+        let index = res.tapIndex
+        let sequence = function() {}
+        switch (index) {
+          case 0:
+            sequence = function(a, b) {
+              let ra = parseInt(a.reward)
+              let rb = parseInt(b.reward)
+              if (isNaN(ra)) { return 1 } else if (isNaN(rb)) { return -1 }
+              if (ra > rb) { return 1 } else if (ra < rb) { return -1 } else { return 0 }
+            }
+            break
+          case 1:
+            sequence = function(a, b) {
+              let ra = parseInt(a.reward)
+              let rb = parseInt(b.reward)
+              if (isNaN(ra)) { return 1 } else if (isNaN(rb)) { return -1 }
+              if (ra < rb) { return 1 } else if (ra > rb) { return -1 } else { return 0 }
+            }
+            break
+          case 2:
+            sequence = function(a, b) {
+              let ra = parseInt(a.timeLeft)
+              let rb = parseInt(b.timeLeft)
+              if (isNaN(ra)) { return 1 } else if (isNaN(rb)) { return -1 }
+              if (ra > rb) { return 1 } else if (ra < rb) { return -1 } else { return 0 }
+            }
+            break
+          case 3:
+            sequence = function(a, b) {
+              let ra = parseInt(a.timeLeft)
+              let rb = parseInt(b.timeLeft)
+              if (isNaN(ra)) { return 1 } else if (isNaN(rb)) { return -1 }
+              if (ra < rb) { return 1 } else if (ra > rb) { return -1 } else { return 0 }
+            }
+            break
+        }
+        self.taskItemsDisplayed.sort(sequence)
+        self.$apply()
       })
     }
   }
@@ -160,7 +204,8 @@ export default class extends wepy.page {
   onLoad() {
     let self = this
     // 加载问题: loadMoreQuestions
-    self.addTaskDateDisplayed()
+    self.updateTimeLeft()
+    self.taskItemsDisplayed = self.taskItems
   }
   onReachBottom() {
     let self = this
@@ -169,7 +214,7 @@ export default class extends wepy.page {
   onPullDownRefresh() {
     /** 清空任务数据重新请求 */
   }
-  addTaskDateDisplayedDeprecated() {
+  updateTimeLeftDeprecated() {
     /**
      * 已弃用
      * 为页面数据的taskItems的每一项添加“显示的任务有效时间”属性
@@ -210,9 +255,9 @@ export default class extends wepy.page {
       }
     }
   }
-  addTaskDateDisplayed() {
+  updateTimeLeft() {
     /**
-     * 为页面数据的taskItems的每一项添加“显示的任务有效时间”属性
+     * 为页面数据的taskItems的每一项更新“剩余时间”属性
      * 显示格式: 距结束还剩 天数 时间
      */
     let self = this
@@ -222,12 +267,13 @@ export default class extends wepy.page {
       if (task.taskDateDisplayed) {
         continue
       } else if (now > task.empiredDate) {
+        task.timeLeft = 0
         task.taskDateDisplayed = '已结束'
       } else {
-        let timeLeft = task.empiredDate - now
-        let days = Math.floor(timeLeft / 86400000)
-        let hours = Math.floor((timeLeft % 86400000) / 3600000)
+        task.timeLeft = task.empiredDate - now
         task.taskDateDisplayed = ''
+        let days = Math.floor(task.timeLeft / 86400000)
+        let hours = Math.floor((task.timeLeft % 86400000) / 3600000)
         task.taskDateDisplayed += '距结束还剩' + days + '天' + hours + '小时'
       }
     }
@@ -235,7 +281,7 @@ export default class extends wepy.page {
   loadMoreQuestions() {
     let self = this
     /* 从后端获取问题列表存储到taskList中 */
-    self.addTaskDateDisplayed()
+    self.updateTimeLeft()
   }
 }
 </script>
