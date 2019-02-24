@@ -116,6 +116,7 @@ export default class extends wepy.page {
     let self = this
     self.startDate = self.now.toDateString()
     self.startTime = self.now.toTimeString()
+    /* ####根据任务id向数据库请求任务详细数据 */
   }
 }
 </script>

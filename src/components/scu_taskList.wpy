@@ -2,39 +2,62 @@
     以 scu_ 开头的页面及组件均在该项目中预览效果
     该组件使用app.wpy引入的weui样式-->
 <template>
-  <scroll-view class="tasklist" scroll-y="true">
-    <repeat for="{{ taskItems }}" key="index" index="index" item="item">
-      <navigator class="taskitem" url="./../pages/scu_rewardDetail?id={{ item.id }}">
-        <view class="taskitem_bd">
-          <!-- 一个表示任务状态的图标，效果类似图章，放置在内容部分的左上角 -->
-          <view class="taskitem_status" wx:if="{{ item.status }}">
-            <image 
-              src="./../images/taskStatus{{ item.status }}.png"
-              style='width:100%;height:100%;opacity: 0.8;'
-              mode="aspectFill" />
-          </view>
-          <view class="taskitem_content">
-            <!--任务简介，包括标题、发布人、封面图片、有效时间、类型-->
-            <view class="taskitem_title {{ item.cover?'taskitem_title-with-cover':'' }}">
-              {{ item.title }}
-            </view>
-            <view class="taskitem_cover" wx:if="{{ item.cover && item.cover != 'none' }}">
+  <block>
+    <view class="tabs">
+      <view class="tab search">
+        <icon type="search" size="20"></icon>
+      </view>
+      <view class="tab order">筛选</view>
+    </view>
+    <scroll-view class="tasklist" scroll-y="true">
+      <repeat for="{{ taskItems }}" key="index" index="index" item="item">
+        <navigator class="taskitem" url="./../pages/scu_rewardDetail?id={{ item.id }}">
+          <view class="taskitem_bd">
+            <!-- 一个表示任务状态的图标，效果类似图章，放置在内容部分的左上角 -->
+            <view class="taskitem_status">
               <image 
-                src="{{ item.cover }}"
-                style='width:100%;height:100%;'
+                src="./../images/taskStatus{{ item.status }}.png"
+                style='width:100%;height:100%;opacity: 0.6;'
                 mode="aspectFill" />
             </view>
-            <view class="taskitem_cate">{{ item.cate }}</view>
-            <view class="taskitem_task-date">{{ item.taskDateDisplayed }}</view>
+            <view class="taskitem_content">
+              <!--任务简介，包括标题、关键词、发布人、地点、金额、有效时间-->
+              <view class="taskitem_title {{ item.cover?'taskitem_title-with-cover':'' }}">
+                {{ item.title }}
+              </view>
+              <view class="taskitem_cover" wx:if="{{ item.cover && item.cover != 'none' }}">
+                <image 
+                  src="{{ item.cover }}"
+                  style='width:100%;height:100%;'
+                  mode="aspectFill" />
+              </view>
+              <view class="taskitem_avatar">
+                <image
+                  src="{{ item.avatar }}"
+                  mode="aspectFill"
+                  style='width:100%;height:100%;' />
+              </view>
+              <view class="taskitem_info">
+                <view class="taskitem_info-tags">
+                  <repeat for="{{ item.tags }}" key="index_tag" index="index_tag" item="item_tag">
+                    <view class="tag">{{ item_tag }}</view>
+                  </repeat>
+                  </view>
+                <view class="taskitem_info-siteNreward">
+                  {{ item.site + ' - ' + item.reward }}
+                </view>
+                <view class="taskitem_info-taskdate">{{ item.taskDateDisplayed }}</view>
+              </view>
+            </view>
           </view>
-        </view>
-      </navigator>
-    </repeat>
-    <view class="weui-loadmore">
-      <view class="weui-loading"/>
-      <view class="weui-loadmore__tips">加载中</view>
-    </view>
-  </scroll-view>
+        </navigator>
+      </repeat>
+      <view class="weui-loadmore">
+        <view class="weui-loading"/>
+        <view class="weui-loadmore__tips">加载中</view>
+      </view>
+    </scroll-view>
+  </block>
 </template>
 
 <script>
@@ -65,21 +88,37 @@ export default class TaskList extends wepy.component {
 </script>
 
 <style lang="less">
+.tabs {
+  position: fixed;
+  height: 60rpx;
+  width: calc(~ "100% - 20rpx");
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: white;
+  z-index: 100;
+  .tab {
+    display: flex;
+    text-align: center;
+    justify-content: center;
+    flex-grow: 1;
+  }
+}
 .tasklist {
   height: 100%;
   width: 100%;
+  padding-top: 50rpx;
   .taskitem {
     width: 100%;
   }
 }
 .tasklist .taskitem .taskitem_bd {
-  position:relative;
+  position: relative;
   overflow: hidden;
   padding: 20rpx;
   height: auto;
   background-color: #fff;
   margin-bottom: 15rpx;
-  // border-bottom: 3rpx solid #eee;
   .taskitem_status {
     position: absolute;
     top: -30rpx;
@@ -117,19 +156,47 @@ export default class TaskList extends wepy.component {
     flex-grow: 1;
     order: 1;
   }
-  .taskitem_cate {
-    color: #aaa;
-    flex-basis: 20%;
-    font-size: 30rpx;
-    order: 2;
+  .taskitem_avatar {
+    height: 80rpx;
+    width: 80rpx;
+    border-radius: 50%;
+    margin-right: 30rpx;
+    margin-left: 10rpx;
+    overflow: hidden;
+    align-self: flex-end;
   }
-  .taskitem_task-date {
+}
+
+.tasklist .taskitem_bd .taskitem_content .taskitem_info {
+  color: #aaa;
+  order: 2;
+  flex-grow: 1;
+  flex-basis: 60%;
+  display: flex;
+  justify-content: flex-start;
+  flex-wrap: wrap;
+  .taskitem_info-tags {
+    flex-basis: 100%;
+    flex-shrink: 0;
+    order: 0;
+    font-size: 30rpx;
+    margin-bottom: 10rpx;
+    display: flex;
+    justify-content: flex-start;
+    .tag {
+      margin-bottom: 0;
+      // flex-basis: 25%;
+      flex-grow: 0;
+    }
+  }
+  .taskitem_info-siteNreward {
+    flex-grow: 1;
+  }
+  .taskitem_info-taskdate {
     text-align: right;
     font-size: 30rpx;
     color: #bbb;
-    flex-basis: 50%;
     flex-grow: 1;
-    order: 3;
   }
 }
 </style>
