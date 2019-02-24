@@ -101,7 +101,7 @@
     </scroll-view>
   </view>
   <view @tap="GoToAddThing">
-    <image class="add_thing" src="../icon/添加.png"/>
+    <image class="add_thing" src="../icon/add.png"/>
   </view>
 
 </view>
