@@ -65,6 +65,14 @@
   }
 }
 
+.add_thing{
+  position:fixed;
+  width: 42px;
+  height:42px;
+  bottom:20px;
+  right:20px;
+}
+
 </style>
 
 <template>
@@ -92,8 +100,13 @@
         </view>
     </scroll-view>
   </view>
+  <view @tap="GoToAddThing">
+    <image class="add_thing" src="../icon/添加.png"/>
+  </view>
+
 </view>
 </template>
+
 <script>
 import wepy from 'wepy';
 import api from '../api/api';
@@ -103,6 +116,7 @@ import {
 } from '../utils/constant';
 
 import tip from '../utils/tip';
+
 
 
 export default class Thing extends wepy.page {
@@ -320,8 +334,19 @@ export default class Thing extends wepy.page {
 
   }
 
+  GoToAddThing(){
+    wepy.navigateTo({ url: './thingPost' });
+  }
+
   onShow() {
-    this.getRootCateTopLevel();
+    wepy.showToast({
+      title: '右下方添加物品', //提示的内容,
+      icon: 'success', //图标,
+      duration: 2000, //延迟时间,
+      mask: true, //显示透明蒙层，防止触摸穿透,
+      success: res => {}
+    });
+    
   }
 
   computed = {

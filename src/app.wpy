@@ -13,7 +13,8 @@ export default class extends wepy.app {
       'pages/message',
       'pages/setting',
       'pages/order',
-      'pages/scu_question'
+      'pages/scu_question',
+      'pages/thingPost'
       
     ],
     window: {
