@@ -14,7 +14,8 @@
             <input class="weui-input" placeholder="请输入标题，简介" />
           </view>
         </view>
-        <view class="weui-cell weui-cell_input">
+        <!--开始时间及开始日期，已弃用-->
+        <!-- <view class="weui-cell weui-cell_input">
           <view class="weui-cell__hd">
             <view class="weui-label">开始日期</view>
           </view>
@@ -33,13 +34,13 @@
               <view class="weui-input">{{ startTime }}</view>
             </picker>
           </view>
-        </view>
+        </view> -->
         <view class="weui-cell weui-cell_input">
           <view class="weui-cell__hd">
             <view class="weui-label">结束日期</view>
           </view>
           <view class="weui-cell__bd">
-            <picker mode="date" value="{{ empiredDate }}" start="{{ startDate }}" end="2020-09-01" bindchange="bindStartDateChange">
+            <picker mode="date" value="{{ empiredDate }}" start="{{ now.toDateString }}" end="2099-12-31" @change="bindEmpiredDateChange">
               <view class="weui-input">{{ empiredDate }}</view>
             </picker>
           </view>
@@ -49,17 +50,19 @@
             <view class="weui-label">结束时间</view>
           </view>
           <view class="weui-cell__bd">
-            <picker mode="time" value="{{ empiredTime }}" start="{{ startTime }}" end="12:00" bindchange="bindStartTimeChange">
+            <picker mode="time" value="{{ empiredTime }}" start="00:00" end="23:59" @change="bindEmpiredTimeChange">
               <view class="weui-input">{{ empiredTime }}</view>
             </picker>
           </view>
         </view>
-        <view class="weui-cell weui-cell_input">
-          <view class="weui-cell__hd">
+        <view class="weui-cell weui-cell_select">
+          <view class="weui-cell__hd weui-cell__hd_in-select-after">
             <view class="weui-label">地点</view>
           </view>
           <view class="weui-cell__bd">
-            <input class="weui-input" placeholder="请输入地点"/>
+            <picker @change="bindSiteChange" value="{{ siteIndex }}" range="{{ sites }}">
+              <view class="weui-select weui-select_in-select-after">{{sites[siteIndex]}}</view>
+            </picker>
           </view>
         </view>
         <view class="weui-cell weui-cell_input">
@@ -75,12 +78,12 @@
       <view class="weui-cells weui-cells_after-title">
         <view class="weui-cell">
           <view class="weui-cell__bd">
-            <textarea class="weui-textarea" placeholder="请输入悬赏的具体内容" style="height: 5em"/>
+            <textarea class="weui-textarea" placeholder="请输入悬赏的具体内容" style="height: 12em"/>
             <!-- <view class="weui-textarea-counter">0/1000</view> -->
           </view>
         </view>
       </view>
-      <button class="weui-btn" type="primary">提交</button>
+      <button class="weui-btn" type="primary" @tap="onSubmit">提交</button>
     </view>
   </view>
 </template>
@@ -91,23 +94,48 @@ import wepy from 'wepy'
 export default class extends wepy.page {
   data = {
     now: new Date(),
+    sites: ['江安', '望江', '华西'],
     title: '',
     startDate: '',
     startTime: '',
     empiredDate: '',
     empiredTime: '',
-    point: '',
-    rewards: '',
+    site: '江安',
+    siteIndex: 0,
+    reward: '',
     description: ''
   }
   methods = {
-    bindStartDateChange() {
+    // bindStartDateChange() {
+    // },
+    // bindStartTimeChange() {
+    // },
+    bindEmpiredDateChange(e) {
+      let self = this
+      self.empiredDate = e.detail.value
     },
-    bindStartTimeChange() {
+    bindEmpiredTimeChange(e) {
+      let self = this
+      self.empiredTime = e.detail.value
     },
-    bindEmpiredDateChange() {
+    bindSiteChange(e) {
+      let self = this
+      self.siteIndex = e.detail.value
+      self.site = self.sites[self.siteIndex]
     },
-    bindEmpiredTimeChange() {
+    onSubmit() {
+      let self = this
+      console.log(self.title)
+      if (!(self.title && self.empiredDate &&
+        self.empiredTime && self.reward && self.description)) {
+        wepy.showToast({
+          title: '请将信息填写完整',
+          icon: 'none',
+          duration: 1500
+        })
+      } else {
+        /** 向后端提交 */
+      }
     }
   }
   computed = {

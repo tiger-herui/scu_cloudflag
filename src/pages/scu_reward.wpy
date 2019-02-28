@@ -148,10 +148,15 @@ export default class extends wepy.page {
   }
   methods = {
     onSearchTap() {
-      // 弹出侧边搜索栏
+      wepy.navigateTo({
+        url: './scu_rewardSearch'
+      })
     },
     onOrderTap() {
-      // 弹出单选菜单
+      /**
+       * 对已加载的任务进行排序
+       * （仅排序已加载的任务，即未加载的任务无法显示）
+       */
       let self = this
       wepy.showActionSheet({
         itemList: ['悬赏金额顺序', '悬赏金额逆序', '剩余时间顺序', '剩余时间逆序']
@@ -203,7 +208,7 @@ export default class extends wepy.page {
   }
   onLoad() {
     let self = this
-    // 加载问题: loadMoreQuestions
+    // 加载问题: loadMoreQuestions ####
     self.updateTimeLeft()
     self.taskItemsDisplayed = self.taskItems
   }
@@ -212,7 +217,7 @@ export default class extends wepy.page {
     self.loadMoreQuestions()
   }
   onPullDownRefresh() {
-    /** 清空任务数据重新请求 */
+    /** 清空任务数据重新请求#### */
   }
   updateTimeLeftDeprecated() {
     /**
@@ -280,7 +285,7 @@ export default class extends wepy.page {
   }
   loadMoreQuestions() {
     let self = this
-    /* 从后端获取问题列表存储到taskList中 */
+    /* 从后端获取问题列表存储到taskList中#### */
     self.updateTimeLeft()
   }
 }
