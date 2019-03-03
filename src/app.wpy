@@ -9,11 +9,15 @@ export default class extends wepy.app {
       'pages/index',
       'pages/user',
       'pages/thing',
+      'pages/scu_reward',
+      'pages/scu_rewardTask',
+      'pages/scu_rewardSearch',
+      'pages/scu_rewardDetail',
+      'pages/scu_rewardPost',
       'pages/points',
       'pages/message',
       'pages/setting',
       'pages/order',
-      'pages/scu_question',
       'pages/thingPost'
       
     ],
@@ -41,8 +45,8 @@ export default class extends wepy.app {
           selectedIconPath:"icon/baibao2.png"
         },
         {
-          pagePath: "pages/scu_question",
-          text: "问答",
+          pagePath: "pages/scu_reward",
+          text: "悬赏",
           iconPath:"icon/wenda.png",
           selectedIconPath:"icon/wenda2.png"
         },

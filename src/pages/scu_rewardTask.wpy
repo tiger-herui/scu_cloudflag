@@ -1,0 +1,18 @@
+<!--悬赏中所接任务的详情页面
+    可以查看任务状态和提交任务的完成情况、与任务发布人联系-->
+<template>
+  <view class="page">
+    <view class="page__bd">
+
+    </view>
+  </view>
+</template>
+<script>
+import wepy from 'wepy'
+
+export default class extends wepy.page {
+}
+</script>
+<style lang="less">
+
+</style>

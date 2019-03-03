@@ -1,0 +1,408 @@
+<!--悬赏版块页面
+    以 scu_ 开头的页面及组件均在该项目中预览效果
+    该页面使用app.wpy引入的weui样式-->
+<template>
+  <view class="page">
+    <view class="page__bd">
+      <view class="tabs">
+        <view class="tab search" @tap="onSearchTap">
+          <icon type="search" size="20"></icon>
+        </view>
+        <view class="tab order" @tap="onOrderTap">排序</view>
+      </view>
+      <scroll-view class="tasklist" scroll-y="true">
+        <repeat for="{{ taskItemsDisplayed }}" key="index" index="index" item="item">
+          <navigator class="taskitem" url="./../pages/scu_rewardDetail?id={{ item.id }}">
+            <view class="taskitem_bd">
+              <!-- 一个表示任务状态的图标，效果类似图章，放置在内容部分的左上角 -->
+              <view class="taskitem_status">
+                <image 
+                  src="./../images/taskStatus{{ item.status }}.png"
+                  style='width:100%;height:100%;opacity: 0.6;'
+                  mode="aspectFill" />
+              </view>
+              <view class="taskitem_content">
+                <!--任务简介，包括标题、关键词、发布人、地点、金额、有效时间-->
+                <view class="taskitem_title {{ item.cover?'taskitem_title-with-cover':'' }}">
+                  {{ item.title }}
+                </view>
+                <view class="taskitem_cover" wx:if="{{ item.cover && item.cover != 'none' }}">
+                  <image 
+                    src="{{ item.cover }}"
+                    style='width:100%;height:100%;'
+                    mode="aspectFill" />
+                </view>
+                <view class="taskitem_avatar">
+                  <image
+                    src="{{ item.avatar }}"
+                    mode="aspectFill"
+                    style='width:100%;height:100%;' />
+                </view>
+                <view class="taskitem_info">
+                  <view class="taskitem_info-tags">
+                    <repeat for="{{ item.tags }}" key="index_tag" index="index_tag" item="item_tag">
+                      <view class="tag">{{ item_tag }}</view>
+                    </repeat>
+                    </view>
+                  <view class="taskitem_info-siteNreward">
+                    {{ item.site + ' - ' + item.reward }}
+                  </view>
+                  <view class="taskitem_info-taskdate">{{ item.taskDateDisplayed }}</view>
+                </view>
+              </view>
+            </view>
+          </navigator>
+        </repeat>
+        <view class="weui-loadmore">
+          <view class="weui-loading"/>
+          <view class="weui-loadmore__tips">加载中</view>
+        </view>
+      </scroll-view>
+      <hoverBtn :postUrl="postUrl"></hoverBtn>
+    </view>
+  </view>
+</template>
+<script>
+import wepy from 'wepy'
+import HoverBtn from './../components/hover-button'
+
+export default class extends wepy.page {
+  config = {
+    navigationBarTitleText: '悬赏'
+  }
+  data = {
+    postUrl: './scu_rewardPost',
+    // 以下为测试使用的数据
+    taskItems: [{
+      id: 1,
+      title: '属性定义了在分配多余空间之前，项目占据',
+      startDate: new Date(2015, 5, 19, 20, 15, 30, 123),
+      empiredDate: new Date(2019, 5, 19, 20, 15, 30, 123),
+      timeLeft: NaN,
+      taskDateDisplayed: '',
+      cover: '',
+      author: 'author1',
+      avatar: './../images/me.png',
+      site: '江安',
+      reward: '5元',
+      tags: ['tag1', 'tag2'],
+      status: 2   // 0: 可接受, 1: 已接受, 2: 已失效, 3: 未开始
+    }, {
+      id: 2,
+      title: 'task2任务2任务2任务2任务2任务2任务2任务2任务2任务2任务2任务2任务2任务2任务2',
+      startDate: new Date(2019, 1, 15, 21, 16, 31, 123),
+      empiredDate: new Date(2019, 2, 19, 20, 15, 30, 123),
+      timeLeft: NaN,
+      taskDateDisplayed: '',
+      cover: '',
+      author: 'author2',
+      avatar: './../images/me.png',
+      site: '江安',
+      reward: '534534324234235元',
+      tags: ['tag1', 'tag2', 'tag3', 'tag4'],
+      status: 1
+    }, {
+      id: 3,
+      title: 'task3',
+      startDate: new Date(2015, 5, 21, 12, 24, 30, 123),
+      empiredDate: new Date(2019, 1, 21, 20, 15, 30, 123),
+      timeLeft: NaN,
+      taskDateDisplayed: '',
+      cover: '',
+      author: 'author3',
+      avatar: './../images/me.png',
+      site: '江安',
+      reward: '1005元',
+      tags: ['tag1', 'tag2', 'tag3'],
+      status: 2
+    }, {
+      id: 4,
+      title: 'task4',
+      startDate: new Date(2019, 5, 21, 12, 24, 30, 123),
+      empiredDate: new Date(2019, 1, 21, 20, 15, 30, 123),
+      timeLeft: NaN,
+      taskDateDisplayed: '',
+      cover: '',
+      author: 'author3',
+      avatar: './../images/me.png',
+      site: '江安',
+      reward: '5元',
+      tags: ['tag1'],
+      status: 3
+    }, {
+      id: 5,
+      title: 'task5',
+      startDate: new Date(2015, 5, 21, 12, 24, 30, 123),
+      empiredDate: new Date(),
+      timeLeft: NaN,
+      taskDateDisplayed: '',
+      cover: '',
+      author: 'author3',
+      avatar: './../images/me.png',
+      site: '江安',
+      reward: '5元',
+      tags: ['tag1', 'tag2'],
+      status: 0
+    }],
+    taskItemsDisplayed: []
+  }
+  methods = {
+    onSearchTap() {
+      wepy.navigateTo({
+        url: './scu_rewardSearch'
+      })
+    },
+    onOrderTap() {
+      /**
+       * 对已加载的任务进行排序
+       * （仅排序已加载的任务，即未加载的任务无法显示）
+       */
+      let self = this
+      wepy.showActionSheet({
+        itemList: ['悬赏金额顺序', '悬赏金额逆序', '剩余时间顺序', '剩余时间逆序']
+      })
+      .then(function(res) {
+        let index = res.tapIndex
+        let sequence = function() {}
+        switch (index) {
+          case 0:
+            sequence = function(a, b) {
+              let ra = parseInt(a.reward)
+              let rb = parseInt(b.reward)
+              if (isNaN(ra)) { return 1 } else if (isNaN(rb)) { return -1 }
+              if (ra > rb) { return 1 } else if (ra < rb) { return -1 } else { return 0 }
+            }
+            break
+          case 1:
+            sequence = function(a, b) {
+              let ra = parseInt(a.reward)
+              let rb = parseInt(b.reward)
+              if (isNaN(ra)) { return 1 } else if (isNaN(rb)) { return -1 }
+              if (ra < rb) { return 1 } else if (ra > rb) { return -1 } else { return 0 }
+            }
+            break
+          case 2:
+            sequence = function(a, b) {
+              let ra = parseInt(a.timeLeft)
+              let rb = parseInt(b.timeLeft)
+              if (isNaN(ra)) { return 1 } else if (isNaN(rb)) { return -1 }
+              if (ra > rb) { return 1 } else if (ra < rb) { return -1 } else { return 0 }
+            }
+            break
+          case 3:
+            sequence = function(a, b) {
+              let ra = parseInt(a.timeLeft)
+              let rb = parseInt(b.timeLeft)
+              if (isNaN(ra)) { return 1 } else if (isNaN(rb)) { return -1 }
+              if (ra < rb) { return 1 } else if (ra > rb) { return -1 } else { return 0 }
+            }
+            break
+        }
+        self.taskItemsDisplayed.sort(sequence)
+        self.$apply()
+      })
+    }
+  }
+  components = {
+    hoverBtn: HoverBtn
+  }
+  onLoad() {
+    let self = this
+    // 加载问题: loadMoreQuestions ####
+    self.updateTimeLeft()
+    self.taskItemsDisplayed = self.taskItems
+  }
+  onReachBottom() {
+    let self = this
+    self.loadMoreQuestions()
+  }
+  onPullDownRefresh() {
+    /** 清空任务数据重新请求#### */
+  }
+  updateTimeLeftDeprecated() {
+    /**
+     * 已弃用
+     * 为页面数据的taskItems的每一项添加“显示的任务有效时间”属性
+     * 显示格式: 开始日期 开始时间 —— 结束日期 结束时间
+     */
+    let self = this
+    let now = new Date()
+    for (let i = 0; i < self.taskItems.length; i++) {
+      if (self.taskItems[i].taskDateDisplayed) {
+        continue
+      } else if (self.taskItems[i].empiredDate && self.taskItems[i].startDate) {
+        let task = self.taskItems[i]
+        let startDate = task.startDate
+        let empiredDate = task.empiredDate
+        let taskEmpiredToday = false
+        task.taskDateDisplayed = ''
+        // 开始时间
+        if (startDate.getFullYear() !== now.getFullYear()) {
+          task.taskDateDisplayed += startDate.getFullYear() + '-'
+        }
+        if (startDate.toDateString() === now.toDateString()) {
+          task.taskDateDisplayed += '今天'
+          taskEmpiredToday = true
+        } else {
+          task.taskDateDisplayed += (startDate.getMonth() + 1) + '-' + startDate.getDate() + ' '
+        }
+        task.taskDateDisplayed += startDate.getHours() + ':' + startDate.getMinutes() + '——'
+        // 截止时间
+        if (empiredDate.getFullYear() !== startDate.getFullYear()) {
+          task.taskDateDisplayed += empiredDate.getFullYear() + '-'
+        }
+        if (empiredDate.toDateString() !== startDate.toDateString()) {
+          if (!taskEmpiredToday) {
+            task.taskDateDisplayed += (empiredDate.getMonth() + 1) + '-' + empiredDate.getDate() + ' '
+          }
+        }
+        task.taskDateDisplayed += empiredDate.getHours() + ':' + empiredDate.getMinutes()
+      }
+    }
+  }
+  updateTimeLeft() {
+    /**
+     * 为页面数据的taskItems的每一项更新“剩余时间”属性
+     * 显示格式: 距结束还剩 天数 时间
+     */
+    let self = this
+    let now = new Date()
+    for (let i = 0; i < self.taskItems.length; i++) {
+      let task = self.taskItems[i]
+      if (task.taskDateDisplayed) {
+        continue
+      } else if (now > task.empiredDate) {
+        task.timeLeft = 0
+        task.taskDateDisplayed = '已结束'
+      } else {
+        task.timeLeft = task.empiredDate - now
+        task.taskDateDisplayed = ''
+        let days = Math.floor(task.timeLeft / 86400000)
+        let hours = Math.floor((task.timeLeft % 86400000) / 3600000)
+        task.taskDateDisplayed += '距结束还剩' + days + '天' + hours + '小时'
+      }
+    }
+  }
+  loadMoreQuestions() {
+    let self = this
+    /* 从后端获取问题列表存储到taskList中#### */
+    self.updateTimeLeft()
+  }
+}
+</script>
+<style lang="less">
+@pageBgColor: #F8F8F8;
+
+.tabs {
+  position: fixed;
+  height: 60rpx;
+  width: calc(~ "100% - 20rpx");
+  border-bottom: 1rpx solid @pageBgColor;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: white;
+  z-index: 100;
+  .tab {
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-grow: 1;
+  }
+}
+.tasklist {
+  height: 100%;
+  width: 100%;
+  padding-top: 50rpx;
+  .taskitem {
+    width: 100%;
+  }
+}
+.tasklist .taskitem .taskitem_bd {
+  position: relative;
+  overflow: hidden;
+  padding: 20rpx;
+  height: auto;
+  background-color: #fff;
+  margin-bottom: 15rpx;
+  .taskitem_status {
+    position: absolute;
+    top: -30rpx;
+    left: -10rpx;
+    height: 160rpx;
+    width: 160rpx;
+  }
+}
+.tasklist .taskitem_bd .taskitem_content {
+  position:relative;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  justify-content: flex-start;
+  align-items: flex-start;
+  .taskitem_title {
+    text-align: left;
+    margin-bottom: 24rpx;
+    font-size: 36rpx;
+    flex-basis: 100%;
+    order: 0;
+    overflow: hidden;
+    overflow-wrap: break-word;
+  }
+  .taskitem_title-with-cover {
+    flex-basis: 60%;
+    margin-right: 10rpx;
+  }
+  .taskitem_cover {
+    height: 200rpx;
+    margin-bottom: 15rpx;
+    flex-basis: 30%;
+    flex-grow: 1;
+    order: 1;
+  }
+  .taskitem_avatar {
+    height: 80rpx;
+    width: 80rpx;
+    border-radius: 50%;
+    margin-right: 30rpx;
+    margin-left: 10rpx;
+    overflow: hidden;
+    align-self: flex-end;
+  }
+}
+.tasklist .taskitem_bd .taskitem_content .taskitem_info {
+  color: #aaa;
+  order: 2;
+  flex-grow: 1;
+  flex-basis: 60%;
+  display: flex;
+  justify-content: flex-start;
+  flex-wrap: wrap;
+  .taskitem_info-tags {
+    flex-basis: 100%;
+    flex-shrink: 0;
+    order: 0;
+    font-size: 30rpx;
+    margin-bottom: 10rpx;
+    display: flex;
+    justify-content: flex-start;
+    .tag {
+      margin-bottom: 0;
+      // flex-basis: 25%;
+      flex-grow: 0;
+    }
+  }
+  .taskitem_info-siteNreward {
+    flex-grow: 1;
+  }
+  .taskitem_info-taskdate {
+    text-align: right;
+    font-size: 30rpx;
+    color: #bbb;
+    flex-grow: 1;
+  }
+}
+</style>
