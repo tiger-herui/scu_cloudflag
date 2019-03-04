@@ -1,9 +1,53 @@
 <!--悬赏中所接任务的详情页面
     可以查看任务状态和提交任务的完成情况、与任务发布人联系-->
+<!--未经过编译-->
 <template>
   <view class="page">
+    <view class="page__hd">
+      <view class="page__title">{{ status }}</view>
+      <view class="page__desc">描述</view>
+    </view>
     <view class="page__bd">
-
+      <view class="weui-form-preview">
+        <view class="weui-form-preview__hd">
+          <view class="weui-form-preview__item">
+            <view class="weui-form-preview__label">任务标题</view>
+            <view class="weui-form-preview__value_in-hd">{{ taskInfo.title }}</view>
+          </view>
+        </view>
+        <view class="weui-form-preview__bd">
+          <view class="weui-form-preview__item">
+            <view class="weui-form-preview__label">发起人</view>
+            <view class="weui-form-preview__value">{{ taskInfo.author }}</view>
+          </view>
+          <view class="weui-form-preview__item">
+            <view class="weui-form-preview__label">地点</view>
+            <view class="weui-form-preview__value">{{ taskInfo.site }}</view>
+          </view>
+          <view class="weui-form-preview__item">
+            <view class="weui-form-preview__label">悬赏金额</view>
+            <view class="weui-form-preview__value">{{ taskInfo.reward }}</view>
+          </view>
+          <view class="weui-form-preview__item">
+            <view class="weui-form-preview__label">剩余时间</view>
+            <view class="weui-form-preview__value">{{ timeLeft }}</view>
+          </view>
+        </view>
+        <view class="weui-form-preview__ft">
+          <navigator
+            url="scu_rewardDetail?id={{ taskInfo.id }}"
+            class="weui-form-preview__btn weui-form-preview__btn_default"
+            hover-class="weui-form-preview__btn_active">
+            详情
+          </navigator>
+          <!--完成按钮，点击后会进行进一步确认，确认后结束任务并提醒发布人确认-->
+          <navigator
+            class="weui-form-preview__btn weui-form-preview__btn_primary"
+            hover-class="weui-form-preview__btn_active">
+            完成
+          </navigator>
+        </view>
+      </view>
     </view>
   </view>
 </template>
@@ -11,6 +55,45 @@
 import wepy from 'wepy'
 
 export default class extends wepy.page {
+  data = {
+    now: new Date(),
+    status: '任务接受成功！',  // 显示任务的状态，现在默认进入页面的方式是接受任务后自动跳转，所以设置该初始值
+    taskInfo: {
+      id: '',  // 任务id，用于请求任务详细信息
+      title: '',
+      author: '',
+      site: '',
+      reward: '',
+      empiredDate: 0
+    }
+  }
+  computed = {
+    timeLeft() {
+      let self = this
+      let timeLeft = self.taskInfo.empiredDate - self.now
+      if (timeLeft <= 0) {
+        return '已结束'
+      } else if (timeLeft >= (3600000 * 6)) {
+        let days = Math.floor(timeLeft / 86400000)
+        let hours = Math.floor((timeLeft % 86400000) / 3600000)
+        return (days + '天' + hours + '小时')
+      } else {
+        let hours = Math.floor((timeLeft / 3600000))
+        let minutes = Math.floor((timeLeft % 3600000) / 60000)
+        return (hours + '小时' + minutes + '分钟')
+      }
+    }
+  }
+  onLoad() {
+    // 向服务器获取任务基本信息
+  }
+  onShow() {
+    /**
+    * 每次显示都刷新剩余时间
+    */
+    let self = this
+    self.now = new Date()
+  }
 }
 </script>
 <style lang="less">

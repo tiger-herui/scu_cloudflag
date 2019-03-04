@@ -4,54 +4,56 @@
 <template>
   <view class="page">
     <view class="page__hd">
-			<view class="weui-search-bar">
-				<view class="weui-search-bar__form">
-					<icon class="weui-icon-search_in-box" type="search" size="14"/>
-					<input
-						type="text"
-						class="weui-search-bar__input"
-						placeholder="搜索"
-						value="{{ inputValue }}"
-						focus="{{ inputShowed }}"
-						@input="inputTyping" />
-						<view class="weui-icon-clear" wx:if="{{ inputValue.length > 0 }}" @tap="clearInput">
-							<icon type="clear" size="14" />
+      <view class="weui-search-bar">
+        <view class="weui-search-bar__form">
+					<view class="weui-search-bar__box">
+						<icon class="weui-icon-search_in-box" type="search" size="14"/>
+						<input
+							type="text"
+							class="weui-search-bar__input"
+							placeholder="搜索"
+							value="{{ inputValue }}"
+							focus="{{ inputShowed }}"
+							@input="inputTyping" />
+							<view class="weui-icon-clear" wx:if="{{ inputValue.length > 0 }}" @tap="clearInput">
+								<icon type="clear" size="14" />
+							</view>
 						</view>
-						<label class="weui-search-bar__label" hidden="{{ inputShowed }}" @tap="showInput">
-							<icon class="weui-icon-search" type="search" size="14"></icon>
-							<view class="weui-search-bar__text">搜索</view>
-						</label>
-				</view>
-				<view
-					class="weui-search-bar__cancel-btn"
-					hidden="{{ !inputShowed }}"
-					@tap="hideIput">
-					取消
-				</view>
-				<view class="weui-cells searchbar-result" wx:if="{{inputValue.length > 0}}">
-					<navigator url="" class="weui-cell" hover-class="weui-cell_active">
-						<view class="weui-cell__bd">
-							<view>实时搜索文本</view>
-						</view>
-					</navigator>
-					<navigator url="" class="weui-cell" hover-class="weui-cell_active">
-						<view class="weui-cell__bd">
-							<view>实时搜索文本</view>
-						</view>
-					</navigator>
-					<navigator url="" class="weui-cell" hover-class="weui-cell_active">
-						<view class="weui-cell__bd">
-							<view>实时搜索文本</view>
-						</view>
-					</navigator>
-					<navigator url="" class="weui-cell" hover-class="weui-cell_active">
-						<view class="weui-cell__bd">
-							<view>实时搜索文本</view>
-						</view>
-					</navigator>
+            <label class="weui-search-bar__label" hidden="{{ inputShowed }}" @tap="showInput">
+              <icon class="weui-icon-search" type="search" size="14"></icon>
+              <view class="weui-search-bar__text">搜索</view>
+            </label>
         </view>
+        <view
+          class="weui-search-bar__cancel-btn"
+          hidden="{{ !inputShowed }}"
+          @tap="hideInput">
+          取消
+        </view>
+      </view>
+			<view class="weui-cells searchbar-result" wx:if="{{inputValue.length > 0}}">
+				<navigator url="" class="weui-cell" hover-class="weui-cell_active">
+					<view class="weui-cell__bd">
+						<view>实时搜索文本</view>
+					</view>
+				</navigator>
+				<navigator url="" class="weui-cell" hover-class="weui-cell_active">
+					<view class="weui-cell__bd">
+						<view>实时搜索文本</view>
+					</view>
+				</navigator>
+				<navigator url="" class="weui-cell" hover-class="weui-cell_active">
+					<view class="weui-cell__bd">
+						<view>实时搜索文本</view>
+					</view>
+				</navigator>
+				<navigator url="" class="weui-cell" hover-class="weui-cell_active">
+					<view class="weui-cell__bd">
+						<view>实时搜索文本</view>
+					</view>
+				</navigator>
 			</view>
-		</view>
+    </view>
     <view class="page__bd">
 
     </view>
@@ -61,33 +63,36 @@
 import wepy from 'wepy'
 
 export default class extends wepy.page {
-	data = {
-		inputShowed: false,
-		inputValue: ''
-	}
-	methods = {
-		showInput() {
-			let self = this
-			self.inputShowed = true
-		},
-		hideInput() {
-			let self = this
-			self.inputValue = ''
-			self.inputShowed = false
-		},
-		clearInput() {
-			let self = this
-			self.inputValue = ''
-		},
-		inputTyping(e) {
-			let self = this
-			self.inputValue = e.detail.value
-		}
-	}
+  data = {
+    inputShowed: false,
+    inputValue: ''
+  }
+  methods = {
+    showInput() {
+      let self = this
+      self.inputShowed = true
+    },
+    hideInput() {
+      let self = this
+      self.inputValue = ''
+      self.inputShowed = false
+    },
+    clearInput() {
+      let self = this
+      self.inputValue = ''
+    },
+    inputTyping(e) {
+      let self = this
+      self.inputValue = e.detail.value
+    }
+  }
 }
 </script>
 <style lang="less">
 .page__hd {
-	padding: 0;
+  padding: 0;
+}
+.weui-cells {
+	margin-top: 0;
 }
 </style>

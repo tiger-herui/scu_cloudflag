@@ -55,7 +55,9 @@ export default class extends wepy.page {
   onLoad(options) {
     let self = this
     self.id = options.id
-    // 从数据库请求问答数据
+    if (self.id !== undefined) {
+      // 从数据库请求问答数据
+    }
   }
 }
 </script>

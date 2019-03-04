@@ -148,7 +148,7 @@ export default class extends wepy.page {
   }
   methods = {
     onSearchTap() {
-      wepy.navigateTo({
+      wx.navigateTo({
         url: './scu_rewardSearch'
       })
     },
