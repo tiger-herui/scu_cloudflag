@@ -17,7 +17,9 @@ export default class extends wepy.app {
       'pages/points',
       'pages/message',
       'pages/setting',
-      'pages/order'
+      'pages/order',
+      'pages/thingPost'
+      
     ],
     window: {
       backgroundTextStyle: 'light',

@@ -8,7 +8,7 @@
 .classify {
   display: flex;
   position: relative;
-  .classify_catetory {
+  .classify_category {
     width: 200rpx;
     position: relative;
     z-index: 1;
@@ -34,7 +34,9 @@
     // margin-left: -15rpx;
     background: #fff;
     padding: 15px 10px 10px 30px;
-    .classify_item {}
+    .classify_item {
+      color:chocolate;
+    }
     .title {
       font-size: 30rpx;
       color: #333;
@@ -46,8 +48,8 @@
       margin: 20rpx 0rpx;
     }
     .child_image {
-      width: 60px;
-      height: 60px;
+      width: 50px;
+      height: 50px;
     }
     .child_name {
       font-size: 26rpx;
@@ -65,6 +67,14 @@
   }
 }
 
+.add_thing{
+  position:fixed;
+  width: 42px;
+  height:42px;
+  bottom:20px;
+  right:20px;
+}
+
 </style>
 
 <template>
@@ -78,8 +88,8 @@
     </view>
   </view>
   <view class="classify" style="height:{{windowHeight-50}}px">
-    <scroll-view class="classify_catetory" scroll-y scroll-with-animation="true" style="height:{{windowHeight-50}}px">
-      <view class="name {{item.active? 'active':''}}" wx:for="{{rootcateList}}" wx:key="item" @tap="changeCate" data-code="{{item.code}}">
+    <scroll-view class="classify_category" scroll-y scroll-with-animation="true" style="height:{{windowHeight-50}}px">
+      <view class="name {{item.active? 'active':''}}" wx:for="{{rootcateList}}" data-index="{{index}}" wx:key="item" @tap="changeCate" data-code="{{item.code}}">
         {{item.name}}
       </view>
     </scroll-view>
@@ -92,8 +102,13 @@
         </view>
     </scroll-view>
   </view>
+  <view @tap="GoToAddThing">
+    <image class="add_thing" src="../icon/add.png"/>
+  </view>
+
 </view>
 </template>
+
 <script>
 import wepy from 'wepy';
 import api from '../api/api';
@@ -103,6 +118,7 @@ import {
 } from '../utils/constant';
 
 import tip from '../utils/tip';
+
 
 
 export default class Thing extends wepy.page {
@@ -121,43 +137,50 @@ export default class Thing extends wepy.page {
     },
     //一级分类数据
     rootcateList: [{
-      code:1,
-      name:'生活'
-    },
-    {
-      code:2,
+      code:0,
       name:'电子'
     },
     {
-      code:3,
-      name:'衣物'
-    },
-    {
-      code:4,
+      code:1,
       name:'食物'
     },
     {
-      code:5,
+      code:2,
+      name:'衣物'
+    },
+    {
+      code:3,
       name:'化妆品'
     },
     {
-      code:6,
-      name:'学习资料'
+      code:4,
+      name:'学习相关'
     },
     {
-      code:7,
-      name:'其他'
-    },
-
+      code:5,
+      name:'还有其他'
+    }
+   
     ],
       
     //二级三级分类数据
-    childcateList:[
-      
-    ],
-
-    
-            
+    childcateList:[ 
+      {
+        thumLogo:"../icon/thing/erji.png",
+        code:1,
+        name:'耳机'
+      },
+      {
+        thumLogo:"../icon/thing/jianpan.png",
+        code:2,
+        name:'键盘'
+      },
+      {
+        thumLogo:"../icon/thing/qita-1.png",
+        code:3,
+        name:'其他'
+      },
+    ],     
   
   }
 
@@ -165,39 +188,141 @@ export default class Thing extends wepy.page {
   async fetchchildData(code){
     this.childcateList = [
       {
-        thumLogo:"../icon/jifen.png",
+        thumLogo:"../icon/thing/erji.png",
         code:1,
-        name:'默认'
+        name:'耳机'
+      },
+      {
+        thumLogo:"../icon/thing/jianpan.png",
+        code:2,
+        name:'键盘'
+      },
+      {
+        thumLogo:"../icon/thing/qita-1.png",
+        code:3,
+        name:'其他'
       },
     ]
     if (code==1){
       this.childcateList = [
         {
-        thumLogo: "../icon/jifen.png",
+        thumLogo: "../icon/thing/lingshi.png",
         code: 1,
-        name:'生活-1'
+        name:'零食'
       },
       {
-        thumLogo: "../icon/shouye.png",
+        thumLogo: "../icon/thing/yinping.png",
         code: 2,
-        name:'生活-2'
+        name:'饮品'
+      },
+      {
+        thumLogo:"../icon/thing/daijinquan.png",
+        code:3,
+        name:'代金券'
+      },
+      {
+        thumLogo:"../icon/thing/qita-2.png",
+        code:4,
+        name:'其他'
       },
       ]
     }
     else if (code==2){
       this.childcateList = [
         {
-        thumLogo: "../icon/shezhi.png",
+        thumLogo: "../icon/thing/shangyi.png",
         code: 1,
-        name:'电子-1'
+        name:'上衣'
       },
       {
-        thumLogo: "../icon/shoucang.png",
+        thumLogo: "../icon/thing/kuzi.png",
         code: 2,
-        name:'电子-2'
+        name:'裤子'
+      },
+      {
+        thumLogo:"../icon/thing/xie.png",
+        code:3,
+        name:'鞋'
+      },
+      {
+        thumLogo:"../icon/thing/bao.png",
+        code:4,
+        name:'包'
+      },
+      {
+        thumLogo:"../icon/thing/maozi.png",
+        code:5,
+        name:'帽子'
+      },
+      {
+        thumLogo:"../icon/thing/qita-3.png",
+        code:6,
+        name:'其他'
       },
       ]
     }
+    else if (code==3){
+      this.childcateList = [
+        {
+        thumLogo: "../icon/thing/kouhong.png",
+        code: 1,
+        name:'口红'
+      },
+      {
+        thumLogo: "../icon/thing/fendi.png",
+        code: 2,
+        name:'粉底'
+      },
+      {
+        thumLogo:"../icon/thing/yanying.png",
+        code:3,
+        name:'眼影'
+      },
+      {
+        thumLogo:"../icon/thing/qita-4.png",
+        code:4,
+        name:'其他'
+      },
+      ]
+    }
+    else if (code==4){
+      this.childcateList = [
+        {
+        thumLogo: "../icon/thing/jiaocai.png",
+        code: 1,
+        name:'教材'
+      },
+      {
+        thumLogo: "../icon/thing/kaoyan.png",
+        code: 2,
+        name:'考研'
+      },
+      {
+        thumLogo:"../icon/thing/siliuji.png",
+        code:3,
+        name:'四六级'
+      },
+      {
+        thumLogo:"../icon/thing/xuni.png",
+        code:4,
+        name:'虚拟资源'
+      },
+      {
+        thumLogo:"../icon/thing/qita-5.png",
+        code:5,
+        name:'其他'
+      },
+      ]
+    }
+   else if (code==5){
+      this.childcateList = [
+        {
+        thumLogo: "../icon/thing/chuansong.png",
+        code: 1,
+        name:'传送门'
+      },
+      ]
+   }
     else {}
     this.$apply();
 
@@ -211,8 +336,19 @@ export default class Thing extends wepy.page {
 
   }
 
+  GoToAddThing(){
+    wepy.navigateTo({ url: './thingPost' });
+  }
+
   onShow() {
-    this.getRootCateTopLevel();
+    wepy.showToast({
+      title: '右下方添加物品', //提示的内容,
+      icon: 'success', //图标,
+      duration: 2000, //延迟时间,
+      mask: true, //显示透明蒙层，防止触摸穿透,
+      success: res => {}
+    });
+    
   }
 
   computed = {
