@@ -23,8 +23,8 @@
     </scroll-view>
     <view class="page__ft">
       <!--其中一个是接单按钮，一个预留。点击事件没写####-->
-      <button style="background-color:yellow;">按钮1</button>
-      <button style="background-color:green;">按钮2</button>
+      <button class="remain-btn">预留</button>
+      <button class="accept-btn" @tap="onAcceptBtnTap">接受</button>
     </view>
   </view>
 </template>
@@ -51,6 +51,16 @@ export default class extends wepy.page {
     // 一个解析富文本（或者只是带图片标签的文本）的组件
   }
   methods = {
+    onAcceptBtnTap() {
+      // 向服务器提交表单，得到回应后跳转到任务执行中页面
+      wepy.navigateTo({
+        url: './scu_rewardTask'
+      })
+      wepy.showToast({
+        title: '接受成功！',
+        icon: 'success'
+      })
+    }
   }
   onLoad(options) {
     let self = this
@@ -90,6 +100,14 @@ image{
     border: 0;
     border-radius: 0;
     flex-grow: 1;
+    &.accept-btn {
+      background-color: orange;
+      color: white;
+    }
+    &.remain-btn {
+      background-color: #fff;
+      color: #999;
+    }
   }
 }
 </style>

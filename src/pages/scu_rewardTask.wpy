@@ -59,12 +59,12 @@ export default class extends wepy.page {
     now: new Date(),
     status: '任务接受成功！',  // 显示任务的状态，现在默认进入页面的方式是接受任务后自动跳转，所以设置该初始值
     taskInfo: {
-      id: '',  // 任务id，用于请求任务详细信息
-      title: '',
-      author: '',
-      site: '',
-      reward: '',
-      empiredDate: 0
+      id: 'text_id',  // 任务id，用于请求任务详细信息
+      title: 'title',
+      author: 'author',
+      site: 'site',
+      reward: 'reward',
+      empiredDate: new Date(2019, 4, 19, 20, 15, 30, 123)
     }
   }
   computed = {
