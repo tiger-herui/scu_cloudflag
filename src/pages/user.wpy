@@ -85,14 +85,14 @@
       <navigator class="item" url="../pages/order">
         <view class="item_content">
           <image class="item_img" src="../icon/dingdan.png"/>
-          <view class="text">我的订单</view>
+          <view class="text">我的百宝</view>
         </view>
         <view class="arrow">&gt;</view>
       </navigator>
       <navigator class="item" url="/pages/points">
         <view class="item_content">
           <image class="item_img" src="../icon/jifen.png"/>
-          <view class="text">我的积分</view>
+          <view class="text">我的悬赏</view>
         </view>
         <view class="arrow">&gt;</view>
       </navigator>

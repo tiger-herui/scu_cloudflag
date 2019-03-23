@@ -75,7 +75,7 @@ export default class extends wepy.page {
     // 以下为测试使用的数据
     taskItems: [{
       id: 1,
-      title: '属性定义了在分配多余空间之前，项目占据',
+      title: '测试01',
       startDate: new Date(2015, 5, 19, 20, 15, 30, 123),
       empiredDate: new Date(2019, 5, 19, 20, 15, 30, 123),
       timeLeft: NaN,
@@ -89,7 +89,7 @@ export default class extends wepy.page {
       status: 2   // 0: 可接受, 1: 已接受, 2: 已失效, 3: 未开始
     }, {
       id: 2,
-      title: 'task2任务2任务2任务2任务2任务2任务2任务2任务2任务2任务2任务2任务2任务2任务2',
+      title: '测试02',
       startDate: new Date(2019, 1, 15, 21, 16, 31, 123),
       empiredDate: new Date(2019, 2, 19, 20, 15, 30, 123),
       timeLeft: NaN,
@@ -98,7 +98,7 @@ export default class extends wepy.page {
       author: 'author2',
       avatar: './../images/me.png',
       site: '江安',
-      reward: '534534324234235元',
+      reward: '534元',
       tags: ['tag1', 'tag2', 'tag3', 'tag4'],
       status: 1
     }, {
@@ -211,6 +211,15 @@ export default class extends wepy.page {
     // 加载问题: loadMoreQuestions ####
     self.updateTimeLeft()
     self.taskItemsDisplayed = self.taskItems
+  }
+  onShow() {
+    wepy.showToast({
+      title: '右下方添加悬赏', 
+      icon: 'success', 
+      duration: 1000, 
+      mask: true,
+      success: res => {}
+    });
   }
   onReachBottom() {
     let self = this
@@ -345,6 +354,7 @@ export default class extends wepy.page {
   align-items: flex-start;
   .taskitem_title {
     text-align: left;
+    padding-left: 20%;
     margin-bottom: 24rpx;
     font-size: 36rpx;
     flex-basis: 100%;

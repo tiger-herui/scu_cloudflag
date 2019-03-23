@@ -4,55 +4,14 @@
 <template>
   <view class="page">
     <view class="page__bd">
-      <view class="weui-cells__title">发布一个悬赏吧！</view>
+      <view class="weui-cells__title">发布一个交易吧！</view>
       <view class="weui-cells weui-cells_after-title">
         <view class="weui-cell weui-cell_input">
           <view class="weui-cell__hd">
             <view class="weui-label">标题</view>
           </view>
           <view class="weui-cell__bd">
-            <input class="weui-input" placeholder="请输入标题，简介" />
-          </view>
-        </view>
-        <!--开始时间及开始日期，已弃用-->
-        <!-- <view class="weui-cell weui-cell_input">
-          <view class="weui-cell__hd">
-            <view class="weui-label">开始日期</view>
-          </view>
-          <view class="weui-cell__bd">
-            <picker mode="date" value="{{ startDate }}" start="{{ startDate }}" end="2020-09-01" bindchange="bindStartDateChange">
-              <view class="weui-input">{{ startDate }}</view>
-            </picker>
-          </view>
-        </view>
-        <view class="weui-cell weui-cell_input">
-          <view class="weui-cell__hd">
-            <view class="weui-label">开始时间</view>
-          </view>
-          <view class="weui-cell__bd">
-            <picker mode="time" value="{{ startTime }}" start="{{ startTime }}" end="12:00" bindchange="bindStartTimeChange">
-              <view class="weui-input">{{ startTime }}</view>
-            </picker>
-          </view>
-        </view> -->
-        <view class="weui-cell weui-cell_input">
-          <view class="weui-cell__hd">
-            <view class="weui-label">结束日期</view>
-          </view>
-          <view class="weui-cell__bd">
-            <picker mode="date" value="{{ empiredDate }}" start="{{ now.toDateString }}" end="2099-12-31" @change="bindEmpiredDateChange">
-              <view class="weui-input">{{ empiredDate }}</view>
-            </picker>
-          </view>
-        </view>
-        <view class="weui-cell weui-cell_input">
-          <view class="weui-cell__hd">
-            <view class="weui-label">结束时间</view>
-          </view>
-          <view class="weui-cell__bd">
-            <picker mode="time" value="{{ empiredTime }}" start="00:00" end="23:59" @change="bindEmpiredTimeChange">
-              <view class="weui-input">{{ empiredTime }}</view>
-            </picker>
+            <input class="weui-input" placeholder="请输入物品名称" />
           </view>
         </view>
         <view class="weui-cell weui-cell_select">
@@ -65,20 +24,43 @@
             </picker>
           </view>
         </view>
+      
         <view class="weui-cell weui-cell_input">
           <view class="weui-cell__hd">
-            <view class="weui-label">银子</view>
+            <view class="weui-label">结束日期</view>
+          </view>
+          <view class="weui-cell__bd">
+            <picker mode="date" value="{{ empiredDate }}" start="{{ now.toDateString }}" end="2099-12-31" @change="bindEmpiredDateChange">
+              <view class="weui-input">{{ empiredDate }}</view>
+            </picker>
+          </view>
+        </view>
+        <view class="weui-cell weui-cell_input">
+          <view class="weui-cell__hd">
+            <view class="weui-label">选择分类</view>
+          </view>
+          <view class="weui-cell__bd">
+            <picker mode="multiSelector" @change="bindMultiPickerChange" @columnchange="bindColumnChange" value="{{index}}" range="{{Category}}">
+             <view class="weui-input" value="{{Category[0][index[0]]}},{{Category[1][index[1]]}}">
+                {{Category[0][index[0]]}},{{Category[1][index[1]]}}
+              </view>
+            </picker>
+          </view>
+        </view>
+        <view class="weui-cell weui-cell_input">
+          <view class="weui-cell__hd">
+            <view class="weui-label">出售价格</view>
           </view>
           <view class="weui-cell__bd">
             <input class="weui-input" placeholder="请输入悬赏金额"/>
           </view>
         </view>
       </view>
-      <view class="weui-cells__title">悬赏描述</view>
+      <view class="weui-cells__title">物品描述</view>
       <view class="weui-cells weui-cells_after-title">
         <view class="weui-cell">
           <view class="weui-cell__bd">
-            <textarea class="weui-textarea" placeholder="请输入悬赏的具体内容" style="height: 12em"/>
+            <textarea class="weui-textarea" placeholder="请输入物品的具体内容" style="height: 12em"/>
             <!-- <view class="weui-textarea-counter">0/1000</view> -->
           </view>
         </view>
@@ -93,6 +75,11 @@ import wepy from 'wepy'
 
 export default class extends wepy.page {
   data = {
+    Category:[
+      ["电子","食物","衣物","化妆品","学习相关","其他"],
+      ["耳机","键盘","其他"]
+    ],
+    index:[0,0],
     now: new Date(),
     sites: ['江安', '望江', '华西'],
     title: '',
@@ -105,6 +92,17 @@ export default class extends wepy.page {
     reward: '',
     description: ''
   }
+
+   async onLoad() {
+            await wepy.login();
+            this.userInfo = await wepy.getUserInfo();
+        }
+
+        async onShow(e){
+            //根据第一分类选择第二个分类的数据
+            this.$apply();
+        }
+
   methods = {
     // bindStartDateChange() {
     // },
@@ -123,6 +121,38 @@ export default class extends wepy.page {
       self.siteIndex = e.detail.value
       self.site = self.sites[self.siteIndex]
     },
+     async bindMultiPickerChange(e){
+                this.index = e.detail.value;
+                console.log(e.detail.value);
+                this.$apply();
+            },
+     async bindColumnChange(e){
+                console.log("修改的列为",e.detail.column,",值为",e.detail.value);
+                if(e.detail.column==0){
+                    switch(e.detail.value){
+                        case 0:
+                            this.Category[1]=["耳机","键盘","其他"];
+                            break;
+                        case 1:
+                            this.Category[1]=["零食","饮品","代金券","其他"];
+                            break;
+                        case 2:
+                            this.Category[1]=["上衣","裤子","鞋","包","帽子","其他"];
+                            break;
+                        case 3:
+                            this.Category[1]=["口红","粉底","眼影","其他"];
+                            break;
+                        case 4:
+                            this.Category[1]=["教材","考研","四六级","虚拟资源","其他"];
+                            break;
+                        case 5:
+                            this.Category[1]=["其他"];
+                            break;
+                    };
+                }
+                 else{}
+                this.$apply();
+     },
     onSubmit() {
       let self = this
       console.log(self.title)
@@ -137,6 +167,8 @@ export default class extends wepy.page {
         /** 向后端提交 */
       }
     }
+    
+    
   }
   computed = {
   }

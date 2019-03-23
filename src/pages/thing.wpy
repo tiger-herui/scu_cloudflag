@@ -102,9 +102,7 @@
         </view>
     </scroll-view>
   </view>
-  <view @tap="GoToAddThing">
-    <image class="add_thing" src="../icon/add.png"/>
-  </view>
+  <hoverBtn :postUrl="postUrl"></hoverBtn>
 
 </view>
 </template>
@@ -118,6 +116,7 @@ import {
 } from '../utils/constant';
 
 import tip from '../utils/tip';
+import HoverBtn from './../components/hover-button';
 
 
 
@@ -126,10 +125,11 @@ export default class Thing extends wepy.page {
     navigationBarTitleText: '百宝',
   }
   components = {
-
+    hoverBtn: HoverBtn
   }
 
   data = {
+    postUrl: './thingpost02',
     scrollTop: 100,
     windowHeight: 0,
     list: {
@@ -336,15 +336,11 @@ export default class Thing extends wepy.page {
 
   }
 
-  GoToAddThing(){
-    wepy.navigateTo({ url: './thingPost' });
-  }
-
   onShow() {
     wepy.showToast({
       title: '右下方添加物品', //提示的内容,
       icon: 'success', //图标,
-      duration: 2000, //延迟时间,
+      duration: 1000, //延迟时间,
       mask: true, //显示透明蒙层，防止触摸穿透,
       success: res => {}
     });
