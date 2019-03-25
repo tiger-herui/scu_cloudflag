@@ -2,7 +2,6 @@
 import wepy from 'wepy'
 import 'wepy-async-function'
 
-
 export default class extends wepy.app {
   config = {
     pages: [
@@ -20,7 +19,6 @@ export default class extends wepy.app {
       'pages/order',
       'pages/thingPost',
       'pages/thingpost02'
-      
     ],
     window: {
       backgroundTextStyle: 'light',
@@ -28,42 +26,41 @@ export default class extends wepy.app {
       navigationBarTitleText: 'SCU云旗社区',
       navigationBarTextStyle: 'black'
     },
-    tabBar:{
-      selectedColor: "#1283c0",
-      color: "#ffbc24",
-      backgroundColor: "#ffe4b5",
+    tabBar: {
+      selectedColor: '#1283c0',
+      color: '#ffbc24',
+      backgroundColor: '#ffe4b5',
       list: [
         {
-          pagePath: "pages/index",
-          text: "首页",
-          iconPath: "icon/shouye.png",
-          selectedIconPath: "icon/shouye2.png"
+          pagePath: 'pages/index',
+          text: '首页',
+          iconPath: 'icon/shouye.png',
+          selectedIconPath: 'icon/shouye2.png'
         },
         {
-          pagePath:"pages/thing",
-          text:"百宝",
-          iconPath:"icon/baibao.png",
-          selectedIconPath:"icon/baibao2.png"
+          pagePath: 'pages/thing',
+          text: '百宝',
+          iconPath: 'icon/baibao.png',
+          selectedIconPath: 'icon/baibao2.png'
         },
         {
-          pagePath: "pages/scu_reward",
-          text: "悬赏",
-          iconPath:"icon/xuanshang.png",
-          selectedIconPath:"icon/xuanshang2.png"
+          pagePath: 'pages/scu_reward',
+          text: '悬赏',
+          iconPath: 'icon/xuanshang.png',
+          selectedIconPath: 'icon/xuanshang2.png'
         },
         {
-          pagePath: "pages/user",
-          text: "我的",
-          iconPath: "icon/wode.png",
-          selectedIconPath: "icon/wode2.png"
+          pagePath: 'pages/user',
+          text: '我的',
+          iconPath: 'icon/wode.png',
+          selectedIconPath: 'icon/wode2.png'
         }
-        
       ]
     }
   }
 
   globalData = {
-    verify:0
+    verify: 0
   };
 
   constructor () {
@@ -75,12 +72,8 @@ export default class extends wepy.app {
     this.testAsync()
   }
 
- 
-
   async testAsync () {
-   
   }
-
 }
 </script>
 
