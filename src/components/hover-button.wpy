@@ -1,7 +1,7 @@
 <template>
   <view class="hoverbtn" @tap="onHoverbtnTap">
-    <view class="hoverbtn_icon">
-      <image src="" style="height:100%;width:100%;"/>
+    <view class="hoverbtn_icon" >
+      <image src="../icon/add.png" style="height:100%;width:100%;"/>
     </view>
   </view>
 </template>
@@ -29,10 +29,9 @@ export default class Hoverbtn extends wepy.component {
 
 <style lang="less">
 .hoverbtn {
-  background-color: red;
   position: fixed;
-  width: 80rpx;
-  height: 80rpx;
+  width: 90rpx;
+  height: 90rpx;
   bottom: 60rpx;
   right: 40rpx;
   border-radius: 50%;
@@ -40,8 +39,8 @@ export default class Hoverbtn extends wepy.component {
   justify-content: center;
   align-items: center;
   .hoverbtn_icon {
-    width: 40%;
-    height: 40%;
+    width: 100%;
+    height: 100%;
   }
 }
 </style>

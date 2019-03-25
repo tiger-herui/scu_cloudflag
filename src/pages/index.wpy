@@ -64,7 +64,6 @@
 </style>
 
 <template>
-
  <view class="container">
     <swiper class="swiper" indicator-active-color="{{indicatorActiveColor}}" indicator-dots="{{indicatorDots}}" autoplay="{{autoplay}}" interval="{{interval}}" duration="{{duration}}" circular="true">
       <block wx:for="{{adList}}" wx:key="key">
@@ -73,7 +72,8 @@
         </swiper-item>
       </block>
     </swiper>
-    <view class="pos">
+    <!-- 暂时用不上这个功能 -->
+    <!-- <view class="pos">
       <view class="search_read_only">
         <navigator class="search_content" open-type="navigate" url="/pages/search">
           <i class="iconfont icon-search"></i>
@@ -84,22 +84,24 @@
           <view class="doc cfff">消息</view>
         </navigator>
       </view>
-    </view>
+    </view> -->
+    
+    <!-- 此处为扩展开发做准备 -->
     <view class="nav_list">
       <navigator open-type="navigate" url="/pages/sign_in">
-        <image src="../images/icon_nav_01_new.png" class="nav_icon"/>
+        <image src="../icon/shouye.png" class="nav_icon"/>
         <view class="nav_text">签到有礼</view>
       </navigator>
       <navigator open-type="navigate" url="/pages/exchange_goods">
-        <image src="../images/icon_nav_02_new.png" class="nav_icon"/>
+        <image src="../icon/shouye.png" class="nav_icon"/>
         <view class="nav_text">商业街</view>
       </navigator>
       <navigator open-type="navigate" url="/pages/wholesale">
-        <image src="../images/icon_nav_03_new.png" class="nav_icon"/>
+        <image src="../icon/shouye.png" class="nav_icon"/>
         <view class="nav_text">待开发</view>
       </navigator>
       <navigator open-type="navigate" url="/pages/replenishment_goods">
-        <image src="../images/icon_nav_04_new.png" class="nav_icon"/>
+        <image src="../icon/shouye.png" class="nav_icon"/>
         <view class="nav_text">待开发</view>
       </navigator>
     </view>

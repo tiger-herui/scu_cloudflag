@@ -18,19 +18,20 @@ export default class extends wepy.app {
       'pages/message',
       'pages/setting',
       'pages/order',
-      'pages/thingPost'
+      'pages/thingPost',
+      'pages/thingpost02'
       
     ],
     window: {
       backgroundTextStyle: 'light',
-      navigationBarBackgroundColor: '#FFD700',
+      navigationBarBackgroundColor: '#ffe4b5',
       navigationBarTitleText: 'SCU云旗社区',
       navigationBarTextStyle: 'black'
     },
     tabBar:{
       selectedColor: "#1283c0",
-      color: "#FF8C00",
-      backgroundColor: "#FFE4B5",
+      color: "#ffbc24",
+      backgroundColor: "#ffe4b5",
       list: [
         {
           pagePath: "pages/index",
@@ -47,8 +48,8 @@ export default class extends wepy.app {
         {
           pagePath: "pages/scu_reward",
           text: "悬赏",
-          iconPath:"icon/wenda.png",
-          selectedIconPath:"icon/wenda2.png"
+          iconPath:"icon/xuanshang.png",
+          selectedIconPath:"icon/xuanshang2.png"
         },
         {
           pagePath: "pages/user",
