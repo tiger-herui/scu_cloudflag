@@ -2,7 +2,8 @@
 @import "./src/less/style";
 @import "./src/less/base";
 .swiper {
-  height: 348rpx;
+  height: 388rpx;
+  width: 100%;
 }
 
 .slide-image {
@@ -68,12 +69,12 @@
     <swiper class="swiper" indicator-active-color="{{indicatorActiveColor}}" indicator-dots="{{indicatorDots}}" autoplay="{{autoplay}}" interval="{{interval}}" duration="{{duration}}" circular="true">
       <block wx:for="{{adList}}" wx:key="key">
         <swiper-item>
-          <image src="{{item.picUrl}}" class="slide-image" @tap="goToAdvert({{item.advertUrl}})" />
+          <image src="{{item.Purl}}" class="slide-image"/>
         </swiper-item>
       </block>
     </swiper>
     <!-- 暂时用不上这个功能 -->
-    <!-- <view class="pos">
+    <view class="pos">
       <view class="search_read_only">
         <navigator class="search_content" open-type="navigate" url="/pages/search">
           <i class="iconfont icon-search"></i>
@@ -84,7 +85,7 @@
           <view class="doc cfff">消息</view>
         </navigator>
       </view>
-    </view> -->
+    </view> 
     
     <!-- 此处为扩展开发做准备 -->
     <view class="nav_list">
@@ -156,8 +157,12 @@
     preventRepeatReuqest: false,
     //广告列表
     adList: [
-      "../icon/shouye.png",
-      "../icon/shouye.png"
+      {Purl:'../images/taskStatus1.png'},
+      {Purl:'../images/taskStatus2.png'},
+      {Purl:'../images/taskStatus3.png'},
+
+      
+    
 
     ],
     tps: 0,

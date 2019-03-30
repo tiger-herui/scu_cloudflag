@@ -19,7 +19,8 @@ export default class extends wepy.app {
       'pages/setting',
       'pages/order',
       'pages/thingPost',
-      'pages/thingpost02'
+      'pages/thingpost02',
+      'pages/search'
       
     ],
     window: {
@@ -91,7 +92,6 @@ export default class extends wepy.app {
   height: 100%;
   display: flex;
   flex-direction: column;
-  align-items: center;
   justify-content: space-between;
   box-sizing: border-box;
 }
