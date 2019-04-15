@@ -22,9 +22,9 @@
       </view>
     </scroll-view>
     <view class="page__ft">
-      <!--其中一个是接单按钮，一个预留。点击事件没写####-->
-      <button style="background-color:yellow;">按钮1</button>
-      <button style="background-color:green;">按钮2</button>
+      <!--其中一个是接单按钮，一个咨询。点击事件没写####-->
+      <button style="background-color:yellow;">咨询</button>
+      <button style="background-color:green;">接单</button>
     </view>
   </view>
 </template>
@@ -38,14 +38,14 @@ export default class extends wepy.page {
   }
   data = {
     id: NaN,
-    title: '测试数据ABCabc!@#——',
-    author: '测试数据ABCabc!@#——',
+    title: '悬赏标题',
+    author: '发布者',
     publishedDate: new Date(),
     point: '江安',
     rewards: '5元',
     cate: '测试数据ABCabc!@#——',
-    tags: ['测试数据ABCabc!@#——', '测试数据ABCabc!@#——'],
-    content: '测试数据ABCabc!@#——测试数据ABCabc!@#——测试数据ABCabc!@#——测试数据ABCabc!@#——测试数据ABCabc!@#——测试数据ABCabc!@#——测试数据ABCabc!@#——测试数据ABCabc!@#——测试数据ABCabc!@#——测试数据ABCabc!@#——测试数据ABCabc!@#——测试数据ABCabc!@#——测试数据ABCabc!@#——测试数据ABCabc!@#——测试数据ABCabc!@#——测试数据ABCabc!@#——测试数据ABCabc!@#——测试数据ABCabc!@#——测试数据ABCabc!@#——测试数据ABCabc!@#——测试数据ABCabc!@#——测试数据ABCabc!@#——测试数据ABCabc!@#——测试数据ABCabc!@#——测试数据ABCabc!@#——测试数据ABCabc!@#——测试数据ABCabc!@#——测试数据ABCabc!@#——测试数据ABCabc!@#——测试数据ABCabc!@#——测试数据ABCabc!@#——测试数据ABCabc!@#——测试数据ABCabc!@#——测试数据ABCabc!@#——测试数据ABCabc!@#——测试数据ABCabc!@#——测试数据ABCabc!@#——测试数据ABCabc!@#——测试数据ABCabc!@#——测试数据ABCabc!@#——测试数据ABCabc!@#——测试数据ABCabc!@#——测试数据ABCabc!@#——测试数据ABCabc!@#——测试数据ABCabc!@#——测试数据ABCabc!@#——测试数据ABCabc!@#——测试数据ABCabc!@#——测试数据ABCabc!@#——测试数据ABCabc!@#——测试数据ABCabc!@#——测试数据ABCabc!@#——测试数据ABCabc!@#——测试数据ABCabc!@#——测试数据ABCabc!@#——测试数据ABCabc!@#——'
+    tags: ['标签1', '标签2'],
+    content: '测试数据ABCabc!bc!@#——测试数据ABCabc!@#——测试数据ABCabc!@#——测试数据ABCabc!@#——'
   }
   components = {
     // 一个解析富文本（或者只是带图片标签的文本）的组件

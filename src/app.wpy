@@ -8,55 +8,56 @@ export default class extends wepy.app {
     pages: [
       'pages/index',
       'pages/user',
-      'pages/thing',
-      'pages/scu_reward',
-      'pages/scu_rewardTask',
-      'pages/scu_rewardSearch',
-      'pages/scu_rewardDetail',
-      'pages/scu_rewardPost',
+      'pages/re_reward',
+      'pages/re_rewardTask',
+      'pages/re_rewardSearch',
+      'pages/re_rewardDetail',
+      'pages/re_rewardPost',
+
+      'pages/th_thing',
+      'pages/th_thingPost',
+      'pages/th_thingSearch',
       'pages/points',
       'pages/message',
       'pages/setting',
       'pages/order',
-      'pages/thingPost',
-      'pages/thingpost02',
-      'pages/search'
+      
       
     ],
     window: {
       backgroundTextStyle: 'light',
-      navigationBarBackgroundColor: '#ffe4b5',
+      navigationBarBackgroundColor: '#f9d485',
       navigationBarTitleText: 'SCU云旗社区',
       navigationBarTextStyle: 'black'
     },
     tabBar:{
-      selectedColor: "#1283c0",
-      color: "#ffbc24",
-      backgroundColor: "#ffe4b5",
+      selectedColor: "#2aa515",
+      color: "#f3973c",
+      backgroundColor: "#f9d485",
       list: [
         {
           pagePath: "pages/index",
           text: "首页",
           iconPath: "icon/shouye.png",
-          selectedIconPath: "icon/shouye2.png"
+          selectedIconPath: "icon/shouye02.png"
         },
         {
-          pagePath:"pages/thing",
+          pagePath:"pages/th_thing",
           text:"百宝",
           iconPath:"icon/baibao.png",
-          selectedIconPath:"icon/baibao2.png"
+          selectedIconPath:"icon/baibao02.png"
         },
         {
-          pagePath: "pages/scu_reward",
+          pagePath: "pages/re_reward",
           text: "悬赏",
           iconPath:"icon/xuanshang.png",
-          selectedIconPath:"icon/xuanshang2.png"
+          selectedIconPath:"icon/xuanshang02.png"
         },
         {
           pagePath: "pages/user",
           text: "我的",
           iconPath: "icon/wode.png",
-          selectedIconPath: "icon/wode2.png"
+          selectedIconPath: "icon/wode02.png"
         }
         
       ]
