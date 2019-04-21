@@ -11,12 +11,12 @@
             <view class="weui-label">标题</view>
           </view>
           <view class="weui-cell__bd">
-            <input class="weui-input" placeholder="请输入物品名称" />
+            <input class="weui-input" type="text" placeholder="请输入物品名称" @confirm="bindTitleChange"/>
           </view>
         </view>
         <view class="weui-cell weui-cell_select">
           <view class="weui-cell__hd weui-cell__hd_in-select-after">
-            <view class="weui-label">地点</view>
+            <view class="weui-label">选择校区</view>
           </view>
           <view class="weui-cell__bd">
             <picker @change="bindSiteChange" value="{{ siteIndex }}" range="{{ sites }}">
@@ -30,7 +30,7 @@
             <view class="weui-label">结束日期</view>
           </view>
           <view class="weui-cell__bd">
-            <picker mode="date" value="{{ empiredDate }}" start="{{ now.toDateString }}" end="2099-12-31" @change="bindEmpiredDateChange">
+            <picker mode="date" start="2019-09-12" end="2081-09-12"  @change="bindEmpiredDateChange">
               <view class="weui-input">{{ empiredDate }}</view>
             </picker>
           </view>
@@ -52,7 +52,7 @@
             <view class="weui-label">出售价格</view>
           </view>
           <view class="weui-cell__bd">
-            <input class="weui-input" placeholder="请输入出售金额"/>
+            <input class="weui-input" placeholder="请输入出售金额" @confirm="bindPriceInput"/>
           </view>
         </view>
       </view>
@@ -60,7 +60,7 @@
       <view class="weui-cells weui-cells_after-title">
         <view class="weui-cell">
           <view class="weui-cell__bd">
-            <textarea class="weui-textarea" placeholder="请输入物品的具体内容" style="height: 12em"/>
+            <textarea class="weui-textarea" placeholder="请输入物品的具体内容" style="height: 12em" @input="bindDescInput"/>
             <!-- <view class="weui-textarea-counter">0/1000</view> -->
           </view>
         </view>
@@ -79,54 +79,67 @@ export default class extends wepy.page {
       ["电子","食物","衣物","化妆品","学习相关","其他"],
       ["耳机","键盘","其他"]
     ],
-    index:[0,0],
+    index:[0,0],        //指向分类的二级索引
     now: new Date(),
     sites: ['江安', '望江', '华西'],
+    siteIndex: 0,       //指向校区的一级索引
     title: '',
-    startDate: '',
-    startTime: '',
-    empiredDate: '',
-    empiredTime: '',
     site: '江安',
-    siteIndex: 0,
-    reward: '',
-    description: ''
+    empiredDate: '',
+    category1: '',
+    category2: '',
+    price: '',
+    description: '',
   }
 
-   async onLoad() {
+  async onLoad() {
             await wepy.login();
             this.userInfo = await wepy.getUserInfo();
+            this.$apply();
         }
 
-        async onShow(e){
+  async onShow(e){
             //根据第一分类选择第二个分类的数据
             this.$apply();
         }
 
   methods = {
-    // bindStartDateChange() {
-    // },
-    // bindStartTimeChange() {
-    // },
-    bindEmpiredDateChange(e) {
-      let self = this
-      self.empiredDate = e.detail.value
+    bindTitleChange(e){
+      let self = this;
+      console.log("标题：",e.detail.value);
+      self.title = e.detail.value;
     },
-    bindEmpiredTimeChange(e) {
-      let self = this
-      self.empiredTime = e.detail.value
+    bindEmpiredDateChange(e) {
+      let self = this;
+      self.empiredDate = e.detail.value;
+      console.log("结束日期：", this.empiredDate);
+      this.$apply();
     },
     bindSiteChange(e) {
-      let self = this
-      self.siteIndex = e.detail.value
-      self.site = self.sites[self.siteIndex]
+      let self = this;
+      self.siteIndex = e.detail.value;
+      self.site = self.sites[self.siteIndex];
+      console.log("校区已修改为:", this.site);
     },
-     async bindMultiPickerChange(e){
+    bindPriceInput(e){
+      let self = this;
+      self.price = e.detail.value;
+      console.log("价格已设置：", this.price);
+    },
+    bindDescInput(e){
+      let self = this;
+      self.description = e.detail.value;
+      console.log("物品描述：", this.description);
+    },
+    async bindMultiPickerChange(e){
                 this.index = e.detail.value;
-                console.log(e.detail.value);
+                console.log("分类索引", e.detail.value);
+                this.category1 = this.Category[0][this.index[0]];
+                this.category2 = this.Category[1][this.index[1]];
+                console.log("分类为：", this.category1, "->", this.category2);
                 this.$apply();
-            },
-     async bindColumnChange(e){
+    },
+    async bindColumnChange(e){
                 console.log("修改的列为",e.detail.column,",值为",e.detail.value);
                 if(e.detail.column==0){
                     switch(e.detail.value){
@@ -150,33 +163,62 @@ export default class extends wepy.page {
                             break;
                     };
                 }
-                 else{}
                 this.$apply();
-     },
+    },
     onSubmit() {
-      let self = this
-      console.log(self.title)
-      if (!(self.title && self.empiredDate &&
-        self.empiredTime && self.reward && self.description)) {
-        wepy.showToast({
-          title: '请将信息填写完整',
-          icon: 'none',
-          duration: 1500
-        })
-      } else {
+      let self = this;
+      console.log(self.title);
+      if (!self.title) 
+      {
+          wepy.showToast({
+            title: '请将信息填写完整',
+            icon: 'none',
+            duration: 1500
+          })
+      } 
+      else 
+      {
         /** 向后端提交 */
-      }
-    }
-    
-    
+        wx.cloud.init(self);  //初始化云函数接口
+        const db = wx.cloud.database();//连接云数据库
+        db.collection('barter').add({
+          data: {
+            title:this.title,
+            site:this.site,
+            empiredDate:this.empiredDate,
+            category1:this.category1,
+            category2:this.category2,
+            price:this.price,
+            description:this.description
+          },
+          success: function(res){
+            wx.showToast({
+              title:'提交成功',
+              icon: 'none',
+              duration: 1500
+            });
+            wx.navigation({url:'/pages/th_thing'});
+          
+          },
+          fail: function(res){
+            wx.showToast({
+              title:'提交失败',
+              icon: 'none',
+              duration: 1500
+            })
+          }
+        });
+      } 
+    } 
   }
+  //computed属性应该放在methods外
   computed = {
   }
   onLoad() {
-    let self = this
-    self.startDate = self.now.toDateString()
-    self.startTime = self.now.toTimeString()
-    /* ####根据任务id向数据库请求任务详细数据 */
+      let self = this
+      self.startDate = self.now.toDateString();
+      self.startTime = self.now.toTimeString();
+      /* ####根据任务id向数据库请求任务详细数据 */
   }
 }
 </script>
