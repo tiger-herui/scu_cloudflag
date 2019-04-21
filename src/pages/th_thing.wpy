@@ -81,7 +81,7 @@
 <view>
   <view class="top_search">
     <view class="search_read_only">
-      <navigator class="search_content" url="/pages/search">
+      <navigator class="search_content" url="/pages/th_thingSearch">
         <i class="iconfont icon-search"></i>
         <view class="search_input">搜索商品</view>
       </navigator>
@@ -95,7 +95,7 @@
     </scroll-view>
     <scroll-view class="classify_detail" scroll-y scroll-with-animation="true" style="height:{{windowHeight-50}}px">
         <view class="children">
-          <navigator hover-class="none" class="children_item" wx:for="{{childcateList}}" wx:for-item="item" wx:key="index" url="/pages/search?cateCode={{item.code}}&title={{item.name}}">
+          <navigator hover-class="none" class="children_item" wx:for="{{childcateList}}" wx:for-item="item" wx:key="index" url="/pages/th_thingSearch?cateCode={{item.code}}&title={{item.name}}">
             <image class="child_image" src="{{item.thumLogo}}"/>
             <view class="child_name">{{item.name}}</view>
           </navigator>
@@ -129,7 +129,7 @@ export default class Thing extends wepy.page {
   }
 
   data = {
-    postUrl: './thingpost02',
+    postUrl: './th_thingPost',
     scrollTop: 100,
     windowHeight: 0,
     list: {

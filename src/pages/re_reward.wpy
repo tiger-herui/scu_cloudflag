@@ -12,7 +12,7 @@
       </view>
       <scroll-view class="tasklist" scroll-y="true">
         <repeat for="{{ taskItemsDisplayed }}" key="index" index="index" item="item">
-          <navigator class="taskitem" url="./../pages/scu_rewardDetail?id={{ item.id }}">
+          <navigator class="taskitem" url="./../pages/re_rewardDetail?id={{ item.id }}">
             <view class="taskitem_bd">
               <!-- 一个表示任务状态的图标，效果类似图章，放置在内容部分的左上角 -->
               <view class="taskitem_status">
@@ -71,7 +71,7 @@ export default class extends wepy.page {
     navigationBarTitleText: '悬赏'
   }
   data = {
-    postUrl: './scu_rewardPost',
+    postUrl: './re_rewardPost',
     // 以下为测试使用的数据
     taskItems: [{
       id: 1,
@@ -148,8 +148,8 @@ export default class extends wepy.page {
   }
   methods = {
     onSearchTap() {
-      wx.navigateTo({
-        url: './scu_rewardSearch'
+      wepy.navigateTo({
+        url: './re_rewardSearch'
       })
     },
     onOrderTap() {
