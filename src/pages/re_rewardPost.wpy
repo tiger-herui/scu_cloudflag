@@ -4,14 +4,17 @@
 <template>
   <view class="page">
     <view class="page__bd">
+      <!--标题-->
       <view class="weui-cells__title">发布一个悬赏吧！</view>
+      <!--关键信息填写栏-->
       <view class="weui-cells weui-cells_after-title">
+        <!--悬赏标题-->
         <view class="weui-cell weui-cell_input">
           <view class="weui-cell__hd">
             <view class="weui-label">标题</view>
           </view>
           <view class="weui-cell__bd">
-            <input class="weui-input" placeholder="请输入标题，简介" />
+            <input class="weui-input" placeholder="请输入标题，简介" @input="bindTitleInput"/>
           </view>
         </view>
         <!--开始时间及开始日期，已弃用-->
@@ -35,6 +38,7 @@
             </picker>
           </view>
         </view> -->
+        <!--结束日期-->
         <view class="weui-cell weui-cell_input">
           <view class="weui-cell__hd">
             <view class="weui-label">结束日期</view>
@@ -45,6 +49,7 @@
             </picker>
           </view>
         </view>
+        <!--结束时间-->
         <view class="weui-cell weui-cell_input">
           <view class="weui-cell__hd">
             <view class="weui-label">结束时间</view>
@@ -55,6 +60,7 @@
             </picker>
           </view>
         </view>
+        <!--地点-->
         <view class="weui-cell weui-cell_select">
           <view class="weui-cell__hd weui-cell__hd_in-select-after">
             <view class="weui-label">地点</view>
@@ -65,20 +71,22 @@
             </picker>
           </view>
         </view>
+        <!--报酬-->
         <view class="weui-cell weui-cell_input">
           <view class="weui-cell__hd">
             <view class="weui-label">银子</view>
           </view>
           <view class="weui-cell__bd">
-            <input class="weui-input" placeholder="请输入悬赏金额"/>
+            <input class="weui-input" placeholder="请输入悬赏金额" @input="bindRewardInput"/>
           </view>
         </view>
       </view>
+      <!--悬赏详细描述填写栏-->
       <view class="weui-cells__title">悬赏描述</view>
       <view class="weui-cells weui-cells_after-title">
         <view class="weui-cell">
           <view class="weui-cell__bd">
-            <textarea class="weui-textarea" placeholder="请输入悬赏的具体内容" style="height: 12em"/>
+            <textarea class="weui-textarea" placeholder="请输入悬赏的具体内容" style="height: 12em" @input="onDescInput"/>
             <!-- <view class="weui-textarea-counter">0/1000</view> -->
           </view>
         </view>
@@ -90,14 +98,17 @@
 
 <script>
 import wepy from 'wepy'
+console.debug = console.log
 
 export default class extends wepy.page {
   data = {
     now: new Date(),
     sites: ['江安', '望江', '华西'],
+
+    // 悬赏任务的详细信息填写
+    startDate: '',  // 已弃用
+    startTime: '',  // 已弃用
     title: '',
-    startDate: '',
-    startTime: '',
     empiredDate: '',
     empiredTime: '',
     site: '江安',
@@ -110,6 +121,10 @@ export default class extends wepy.page {
     // },
     // bindStartTimeChange() {
     // },
+    bindTitleInput(e) {
+      let self = this
+      self.title = e.detail.value
+    },
     bindEmpiredDateChange(e) {
       let self = this
       self.empiredDate = e.detail.value
@@ -123,9 +138,22 @@ export default class extends wepy.page {
       self.siteIndex = e.detail.value
       self.site = self.sites[self.siteIndex]
     },
-    onSubmit() {
+    bindRewardInput(e) {
       let self = this
-      console.log(self.title)
+      self.reward = e.detail.value
+    },
+    onDescInput(e){
+      let self = this
+      self.description = e.detail.value
+    },
+    onSubmit() {
+      /**
+       * 提交reward post
+       */
+      let self = this
+      // 必填信息校验
+      let empiredDate = new Date(self.empiredDate + ' ' + self.empiredTime)
+      let now = new Date()
       if (!(self.title && self.empiredDate &&
         self.empiredTime && self.reward && self.description)) {
         wepy.showToast({
@@ -133,8 +161,63 @@ export default class extends wepy.page {
           icon: 'none',
           duration: 1500
         })
-      } else {
-        /** 向后端提交 */
+      }else if (empiredDate < now) {
+        wepy.showToast({
+          title: '失效时间必须晚于现在',
+          icon: 'none',
+          duration: 1500
+        })
+      }else {
+        // 防止重复提交数据
+        wx.showLoading({
+          title: '正在发布...',
+          mask: true
+        })
+
+        /** ####向后端提交，之后做成调用云函数形式 */
+        const db = wx.cloud.database()
+        db.collection('reward_detail').add({
+          data: {
+            title: self.title,
+            site: self.site,
+            reward: self.reward,
+            empiredDate: empiredDate,
+            postDate: now,
+            state: '可接受',
+            description: self.description,
+            tags: ['快递',]}
+        })
+        // .then(res => { // 想同时更新两个表，但实现不了####
+        //   console.debug(res)
+        //   return db.collection('reward_list').add({
+        //     data: {
+        //       title: self.title,
+        //       site: self.site,
+        //       tags: ["快递"],
+        //       empiredDate: empiredDate,
+        //       postDate: now,
+        //       state: '可接受',
+        //       reward: self.reward
+        //     }
+        //   })
+        // })
+        .then(res => {
+          wx.hideLoading()
+          wx.showToast({
+            title: '发布成功'
+          })
+          wepy.redirectTo({
+            url: 're_rewardTask'
+          })
+        })
+        .catch(err => {
+          console.debug(err)
+          wx.hideLoading()
+          wx.showToast({
+            title: '发布失败',
+            icon: 'loading'
+          })
+        })
       }
     }
   }
@@ -142,8 +225,7 @@ export default class extends wepy.page {
   }
   onLoad() {
     let self = this
-    self.startDate = self.now.toDateString()
-    self.startTime = self.now.toTimeString()
+    wx.cloud.init()
     /* ####根据任务id向数据库请求任务详细数据 */
   }
 }

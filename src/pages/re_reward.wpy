@@ -8,10 +8,10 @@
         <view class="tab search" @tap="onSearchTap">
           <icon type="search" size="20"></icon>
         </view>
-        <view class="tab order" @tap="onOrderTap">排序</view>
+        <view class="tab order" @tap="onOrderTap">分类排序</view>
       </view>
       <scroll-view class="tasklist" scroll-y="true">
-        <repeat for="{{ taskItemsDisplayed }}" key="index" index="index" item="item">
+        <repeat for="{{ taskItems }}" key="index" index="index" item="item">
           <navigator class="taskitem" url="./../pages/re_rewardDetail?id={{ item.id }}">
             <view class="taskitem_bd">
               <!-- 一个表示任务状态的图标，效果类似图章，放置在内容部分的左上角 -->
@@ -66,13 +66,14 @@
 import wepy from 'wepy'
 import HoverBtn from './../components/hover-button'
 
+// console.debug = console.log
+
 export default class extends wepy.page {
   config = {
     navigationBarTitleText: '悬赏'
   }
   data = {
-    postUrl: './re_rewardPost',
-    // 以下为测试使用的数据
+    // 页面显示数据 (目前为测试数据)
     taskItems: [{
       id: 1,
       title: '测试01',
@@ -144,7 +145,12 @@ export default class extends wepy.page {
       tags: ['tag1', 'tag2'],
       status: 0
     }],
-    taskItemsDisplayed: []
+    
+    // 页面状态记录数据
+    postUrl: './re_rewardPost',
+    currentPage: 0,   // 当前页数(数据库)
+    pageNum: 10,      // 每页的任务数量
+    getType: 'new',   // 悬赏任务的获取方式(排序方式)
   }
   methods = {
     onSearchTap() {
@@ -152,10 +158,34 @@ export default class extends wepy.page {
         url: './re_rewardSearch'
       })
     },
-    onOrderTap() {
+    onOrderTap(){
+      wepy.showActionSheet({
+        itemList: ['发布时间',]
+      })
+      .then(res => {
+        switch(res.tapIndex) {
+          case 0:
+            if (self.getType == 'new'){
+              break
+            }else{
+              self.getType = 'new'
+              /** 清空任务列表并按指定排序方式获取新的悬赏任务 */
+              self.taskItems = []
+              self.currentPage = 0
+              self.loadMoreItems(self.getType)
+              break
+            }
+
+          default:
+            break;
+        }
+      })
+    },
+    // 已弃用方法
+    onOrderTapDeprecated() {
       /**
        * 对已加载的任务进行排序
-       * （仅排序已加载的任务，即未加载的任务无法显示）
+       * （仅排序已加载的任务，即未加载的任务无法进行排序）
        */
       let self = this
       wepy.showActionSheet({
@@ -198,36 +228,96 @@ export default class extends wepy.page {
             }
             break
         }
-        self.taskItemsDisplayed.sort(sequence)
+        self.taskItems.sort(sequence)
         self.$apply()
       })
-    }
+    },
   }
   components = {
     hoverBtn: HoverBtn
   }
   onLoad() {
     let self = this
-    // 加载问题: loadMoreQuestions ####
-    self.updateTimeLeft()
+    wx.cloud.init()
+
+    // 加载问题: loadMoreItems ####
     self.taskItemsDisplayed = self.taskItems
+    
+  }
+  onReady() {
+    let self = this
+    self.loadMoreItems()
   }
   onShow() {
+    let self = this
     wepy.showToast({
       title: '右下方添加悬赏', 
       icon: 'success', 
       duration: 1000, 
-      mask: true,
-      success: res => {}
-    });
+      mask: true
+    })
+    self.updateTimeLeft()
   }
   onReachBottom() {
     let self = this
-    self.loadMoreQuestions()
+    self.loadMoreItems()
   }
   onPullDownRefresh() {
     /** 清空任务数据重新请求#### */
   }
+  updateTimeLeft() {
+    /**
+     * 为页面数据的taskItems的每一项更新“剩余时间”属性
+     * 显示格式: 距结束还剩 天数 时间
+     */
+    let self = this
+    let now = new Date()
+    for (let i = 0; i < self.taskItems.length; i++) {
+      let task = self.taskItems[i]
+      if (task.taskDateDisplayed) {
+        continue
+      } else if (now > task.empiredDate) {
+        task.timeLeft = 0
+        task.taskDateDisplayed = '已结束'
+      } else {
+        task.timeLeft = task.empiredDate - now
+        task.taskDateDisplayed = ''
+        let days = Math.floor(task.timeLeft / 86400000)
+        let hours = Math.floor((task.timeLeft % 86400000) / 3600000)
+        task.taskDateDisplayed += '距结束还剩' + days + '天' + hours + '小时'
+      }
+    }
+  }
+  loadMoreItems(getType) {
+    /**
+     * 从服务器获取更多悬赏任务(reward task)，放入页面数据中
+     */
+    console.debug('加载中...')
+    let self = this
+    const db = wx.cloud.database()
+    switch(getType){
+      case 'new':
+      /* #### 从后端获取问题列表存储到taskList中，之后要放到云函数中 */
+        db.collection('reward_detail')  // 应该获取reward_list集合，这里用作测试 ####
+          .orderBy('postDate', 'desc')
+          .skip(self.currentPage * self.pageNum)
+          .limit(self.pageNum)
+          .get()
+          .then(res => {
+            console.debug(res)
+            self.taskItems.push(...res.data)
+            self.currentPage += 1
+          }).catch(err => {
+            console.debug(err)
+          })
+        break
+      default:
+        break
+    }
+    self.updateTimeLeft()
+  }
+
+  // 弃用方法
   updateTimeLeftDeprecated() {
     /**
      * 已弃用
@@ -268,34 +358,6 @@ export default class extends wepy.page {
         task.taskDateDisplayed += empiredDate.getHours() + ':' + empiredDate.getMinutes()
       }
     }
-  }
-  updateTimeLeft() {
-    /**
-     * 为页面数据的taskItems的每一项更新“剩余时间”属性
-     * 显示格式: 距结束还剩 天数 时间
-     */
-    let self = this
-    let now = new Date()
-    for (let i = 0; i < self.taskItems.length; i++) {
-      let task = self.taskItems[i]
-      if (task.taskDateDisplayed) {
-        continue
-      } else if (now > task.empiredDate) {
-        task.timeLeft = 0
-        task.taskDateDisplayed = '已结束'
-      } else {
-        task.timeLeft = task.empiredDate - now
-        task.taskDateDisplayed = ''
-        let days = Math.floor(task.timeLeft / 86400000)
-        let hours = Math.floor((task.timeLeft % 86400000) / 3600000)
-        task.taskDateDisplayed += '距结束还剩' + days + '天' + hours + '小时'
-      }
-    }
-  }
-  loadMoreQuestions() {
-    let self = this
-    /* 从后端获取问题列表存储到taskList中#### */
-    self.updateTimeLeft()
   }
 }
 </script>
