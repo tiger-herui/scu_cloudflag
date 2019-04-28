@@ -11,7 +11,7 @@
             <view class="weui-label">标题</view>
           </view>
           <view class="weui-cell__bd">
-            <input class="weui-input" type="text" placeholder="请输入物品名称" @confirm="bindTitleChange"/>
+            <input class="weui-input" type="text" placeholder="请输入物品名称" @input="bindTitleChange"/>
           </view>
         </view>
         <view class="weui-cell weui-cell_select">
@@ -52,7 +52,7 @@
             <view class="weui-label">出售价格</view>
           </view>
           <view class="weui-cell__bd">
-            <input class="weui-input" placeholder="请输入出售金额" @confirm="bindPriceInput"/>
+            <input class="weui-input" placeholder="请输入出售金额" @input="bindPriceInput"/>
           </view>
         </view>
       </view>
@@ -65,6 +65,19 @@
           </view>
         </view>
       </view>
+      <button class="weui-btn" type="default" @tap="chooseImage" wx:if="{{images.length < 3}}">
+        添加图片
+      </button>
+      <view class="question-images">
+        <block wx:for="{{images}}" wx:key="*this">
+          <view class="q-image-wrap">
+            <!-- 图片缩略图  -->
+            <image class="q-image" src="{{item}}" mode="aspectFill" data-idx="{{idx}}" @tap="handleImagePreview"></image>
+            <!-- 移除图片的按钮  -->
+            <view class="q-image-remover" data-idx="{{idx}}" @tap="removeImage">删除</view>
+          </view>
+        </block>
+      </view>
       <button class="weui-btn" type="primary" @tap="onSubmit">提交</button>
     </view>
   </view>
@@ -72,6 +85,7 @@
 
 <script>
 import wepy from 'wepy'
+import { $init, $digest, uploadimg } from '../utils/util.js'
 
 export default class extends wepy.page {
   data = {
@@ -89,6 +103,7 @@ export default class extends wepy.page {
     category1: '',
     category2: '',
     price: '',
+    images: [],
     description: '',
   }
 
@@ -165,6 +180,32 @@ export default class extends wepy.page {
                 }
                 this.$apply();
     },
+    chooseImage(e){
+      wx.chooseImage({
+        sizeType: ['original', 'compressed'],  //可选择原图或压缩后的图片
+        sourceType: ['album', 'camera'], //可选择性开放访问相册、相机
+        success: res => {
+          const images = this.images.concat(res.tempFilePaths)
+          // 限制最多只能留下3张照片
+          this.images = images.length <= 3 ? images : images.slice(0, 3) 
+          $digest(this)
+        }
+      })
+      console.log("图片本地地址：",this.images);
+    },
+    removeImage(e) {
+      const idx = e.target.dataset.idx
+      this.images.splice(idx, 1)
+      $digest(this)
+    },
+    handleImagePreview(e) {
+      const idx = e.target.dataset.idx
+      const images = this.data.images
+      wx.previewImage({
+        current: images[idx],  //当前预览的图片
+        urls: images,  //所有要预览的图片
+      })
+    },
     onSubmit() {
       let self = this;
       console.log(self.title);
@@ -208,6 +249,8 @@ export default class extends wepy.page {
             })
           }
         });
+        //上传函数写在js脚本里面了
+        uploadimg(self, this.images);
       } 
     } 
   }

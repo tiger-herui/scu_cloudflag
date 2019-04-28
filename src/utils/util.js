@@ -1,3 +1,5 @@
+import objectUtil from './object.util'
+
 function getCurrentTime() {
   let keep = ''
   let date = new Date()
@@ -119,6 +121,71 @@ function convertStarArray(score) {
   }
   return arr
 }
+//上传图片需要用到的init函数
+const $init = (page) => {
+  page.$data = objectUtil.$copy(page.data, true)
+}
+//上传图片需要用到的digest函数
+const $digest = (page) => {
+  let data = page.data
+  let $data = page.$data
+  let ready2set = {}
+
+  for (let k in data) {
+    if (!objectUtil.$isEqual(data[k], $data[k])) {
+      ready2set[k] = data[k]
+      $data[k] = objectUtil.$copy(data[k], true)
+    }
+  }
+
+  if (Object.keys(ready2set).length) {
+    page.setData(ready2set)
+  }
+}
+
+// 上传图片
+function uploadimg(page, path) {
+  wx.showToast({
+  icon: "loading",
+  title: "正在上传"
+  }),
+  wx.uploadFile({
+    url: '图片服务器地址',
+    filePath: path[0],
+    name: 'file',
+    header: { "Content-Type": "multipart/form-data" },
+    success: function (res) {
+            //上传成功返回数据
+      console.log('上传成功返回的数据',JSON.parse(res.data).data);
+      if (res.statusCode != 200) {
+        wx.showModal({
+        title: '提示',
+        content: '上传失败',
+        showCancel: false
+        })
+        return;
+      }
+      else
+      {
+        //成功返回路径
+        return JSON.parse(res.data).url;
+      }
+    },
+    fail: function (e) {
+      console.log(e);
+      wx.showModal({
+        title: '提示',
+        content: '上传失败',
+        showCancel: false
+    })
+  },
+  complete: function () {
+    wx.hideToast(); //隐藏Toast
+  }
+  })
+}
+
+
 module.exports = {
   getCurrentTime: getCurrentTime,
   objLength: objLength,
@@ -130,5 +197,8 @@ module.exports = {
   div: div,
   mul: mul,
   accAdd: accAdd,
-  convertStarArray: convertStarArray
+  convertStarArray: convertStarArray,
+  $init,
+  $digest,
+  uploadimg:uploadimg
 }
