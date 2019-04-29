@@ -163,7 +163,7 @@ export default class extends wepy.page {
         })
       }else if (empiredDate < now) {
         wepy.showToast({
-          title: '失效时间必须晚于现在',
+          title: '失效时间必须晚于当前时间',
           icon: 'none',
           duration: 1500
         })
@@ -176,6 +176,10 @@ export default class extends wepy.page {
 
         /** ####向后端提交，之后做成调用云函数形式 */
         const db = wx.cloud.database()
+        let resId = {
+          id1: '',
+          id2: ''
+        }
         db.collection('reward_detail').add({
           data: {
             title: self.title,
@@ -183,25 +187,29 @@ export default class extends wepy.page {
             reward: self.reward,
             empiredDate: empiredDate,
             postDate: now,
-            state: '可接受',
+            state: 0,
             description: self.description,
+            // #### tags由服务器自动摘要获取
             tags: ['快递',]}
         })
-        // .then(res => { // 想同时更新两个表，但实现不了####
-        //   console.debug(res)
-        //   return db.collection('reward_list').add({
-        //     data: {
-        //       title: self.title,
-        //       site: self.site,
-        //       tags: ["快递"],
-        //       empiredDate: empiredDate,
-        //       postDate: now,
-        //       state: '可接受',
-        //       reward: self.reward
-        //     }
-        //   })
-        // })
+        .then(res => { // 想同时更新两个表，但未实现原子性####
+          resId.id1 = res._id
+          return db.collection('reward_list').add({
+            data: {
+              title: self.title,
+              site: self.site,
+              // #### tags由服务器自动摘要获取
+              tags: ["快递"],
+              empiredDate: empiredDate,
+              detailId: resId.id1,
+              postDate: now,
+              state: 0,
+              reward: self.reward
+            }
+          })
+        })
         .then(res => {
+          resId.id2 = res._id
           wx.hideLoading()
           wx.showToast({
             title: '发布成功'
@@ -212,6 +220,12 @@ export default class extends wepy.page {
         })
         .catch(err => {
           console.debug(err)
+          if(resId.id1){
+            db.collection('reward_detail').doc(resId.id1).remove()
+          }
+          if(resId.id2){
+            db.collection('reward_list').doc(resId.id2).remove()
+          }
           wx.hideLoading()
           wx.showToast({
             title: '发布失败',
@@ -226,7 +240,6 @@ export default class extends wepy.page {
   onLoad() {
     let self = this
     wx.cloud.init()
-    /* ####根据任务id向数据库请求任务详细数据 */
   }
 }
 </script>
