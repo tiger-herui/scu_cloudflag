@@ -47,7 +47,7 @@
                   <view class="taskitem_info-siteNreward">
                     {{ item.site + ' - ' + item.reward }}
                   </view>
-                  <view class="taskitem_info-taskdate">{{ item.taskDateDisplayed }}</view>
+                  <view class="taskitem_info-taskdate">{{ item.timeLeftDisplayed }}</view>
                 </view>
               </view>
             </view>
@@ -173,7 +173,6 @@ export default class extends wepy.page {
   onReady() {
     let self = this
     self.loadMoreItems(self.getType)
-    console.debug(self.taskItems)
   }
   onShow() {
     let self = this
@@ -201,32 +200,33 @@ export default class extends wepy.page {
     let now = new Date()
     for (let i = 0; i < self.taskItems.length; i++) {
       let task = self.taskItems[i]
-      if (task.taskDateDisplayed) {
+      if (task.timeLeftDisplayed) {
         continue
       } else if (now > task.empiredDate) {
         task.timeLeft = 0
-        task.taskDateDisplayed = '已结束'
+        task.timeLeftDisplayed = '已结束'
       } else {
         task.timeLeft = task.empiredDate - now
-        task.taskDateDisplayed = ''
+        task.timeLeftDisplayed = ''
         let days = Math.floor(task.timeLeft / 86400000)
         let hours = Math.floor((task.timeLeft % 86400000) / 3600000)
-        task.taskDateDisplayed += '距结束还剩' + days + '天' + hours + '小时'
+        task.timeLeftDisplayed += '距结束还剩' + days + '天' + hours + '小时'
       }
     }
+    self.$apply()
   }
   loadMoreItems(getType) {
     /**
      * 从服务器获取更多悬赏任务(reward task)，放入页面数据中
      * 根据筛选的具体需求需要后续改进####
      */
-    console.debug('加载中...')
+    // console.debug('加载中...')
     let self = this
     const db = wx.cloud.database()
     switch(getType){
       case 'new':
       /* #### 从后端获取问题列表存储到taskList中，之后要放到云函数中 */
-        console.debug('new')
+        // console.debug('new')
         db.collection('reward_list')
           .orderBy('postDate', 'desc')
           .skip(self.currentPage * self.pageNum)
@@ -234,8 +234,8 @@ export default class extends wepy.page {
           .get()
           .then(res => {
             self.taskItems.push(...res.data)
-            console.debug(this)
             self.currentPage += 1
+            self.updateTimeLeft()
             self.$apply()
           }).catch(err => {
             console.debug(err)
