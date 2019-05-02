@@ -180,19 +180,51 @@ export default class extends wepy.page {
                 }
                 this.$apply();
     },
-    chooseImage(e){
+    chooseImage(res){
+      let that = this;
+      wx.cloud.init(); //初始化云函数接口
       wx.chooseImage({
         sizeType: ['original', 'compressed'],  //可选择原图或压缩后的图片
         sourceType: ['album', 'camera'], //可选择性开放访问相册、相机
-        success: res => {
-          const images = this.images.concat(res.tempFilePaths)
-          // 限制最多只能留下3张照片
-          this.images = images.length <= 3 ? images : images.slice(0, 3) 
-          $digest(this)
+        success: function(res){
+          wx.showLoading({
+          title:'上传中',
+        });
+        setTimeout(function(){
+          wx.hideLoading()
+        },2000)
+        let filePath = res.tempFilePaths[0];
+        const name = Math.random()*1000000;
+        const  cloudPath = name + filePath.match(/\.[^.]+?/)[0];
+        wx.cloud.uploadFile({
+          cloudPath,
+          filePath,
+          success: res => {
+            console.log('上传图片成功',res)
+             that.setData({
+               img:res.fileID
+            });
+             let fileID = res.fileID;
+
+             //这里可以连接数据库，把图片路径单独存在一张表上。
+            // const db = wx.cloud.database();
+            // db.collection("thing_post").add({
+            //   data:{
+            //     img:fileID
+            //   },
+            //   success: function(){
+            //     wx.showToast({
+            //       title:'图片上传成功'
+            //     })
+            //   }
+            // })
+          }
+        });
         }
       })
-      console.log("图片本地地址：",this.images);
-    },
+      
+      },
+ 
     removeImage(e) {
       const idx = e.target.dataset.idx
       this.images.splice(idx, 1)
@@ -220,9 +252,8 @@ export default class extends wepy.page {
       else 
       {
         /** 向后端提交 */
-        wx.cloud.init(self);  //初始化云函数接口
         const db = wx.cloud.database();//连接云数据库
-        db.collection('barter').add({
+        db.collection('thing_post').add({
           data: {
             title:this.title,
             site:this.site,
@@ -230,7 +261,8 @@ export default class extends wepy.page {
             category1:this.category1,
             category2:this.category2,
             price:this.price,
-            description:this.description
+            description:this.description,
+           // img:this.fileID 这样并不能存进去
           },
           success: function(res){
             wx.showToast({
@@ -249,8 +281,8 @@ export default class extends wepy.page {
             })
           }
         });
-        //上传函数写在js脚本里面了
-        uploadimg(self, this.images);
+        //上传函数写在util.js脚本里面了
+        // uploadimg(self, this.images);
       } 
     } 
   }

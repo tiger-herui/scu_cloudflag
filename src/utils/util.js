@@ -149,11 +149,8 @@ function uploadimg(page, path) {
   icon: "loading",
   title: "正在上传"
   }),
-  wx.uploadFile({
-    url: '图片服务器地址',
-    filePath: path[0],
-    name: 'file',
-    header: { "Content-Type": "multipart/form-data" },
+  wx.cloud.uploadFile({
+   cloudPath:'',
     success: function (res) {
             //上传成功返回数据
       console.log('上传成功返回的数据',JSON.parse(res.data).data);
