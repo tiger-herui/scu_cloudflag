@@ -37,7 +37,8 @@ console.debug = console.log;
 
 export default class extends wepy.page {
   config = {
-    navigationBarTitleText: '悬赏详情'
+    navigationBarTitleText: '悬赏详情',
+    backgroundColor: '#ffffff'
   };
   data = {
     title: '',
@@ -68,8 +69,6 @@ export default class extends wepy.page {
   onLoad(options) {
     let self = this;
     self.id = options.id;
-    console.debug(self.id);
-    console.debug(options);
   }
   onShow() {
     let self = this;

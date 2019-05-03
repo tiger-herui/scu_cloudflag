@@ -4,12 +4,13 @@
 <template>
   <view class="page">
     <view class="page__bd">
-      <view class="tabs">
+      <!--下拉刷新时不好看，暂时弃用 ####-->
+      <!-- <view class="tabs">
         <view class="tab search" @tap="onSearchTap">
           <icon type="search" size="20"></icon>
         </view>
         <view class="tab order" @tap="onOrderTap">筛选</view>
-      </view>
+      </view> -->
       <scroll-view class="tasklist" scroll-y="true">
         <repeat for="{{ taskItems }}" key="index" index="index" item="item">
           <navigator class="taskitem" url="./../pages/re_rewardDetail?id={{ item.detailId }}">
@@ -53,10 +54,11 @@
             </view>
           </navigator>
         </repeat>
-        <view class="weui-loadmore">
+        <!--这个loading不好看，弃用####-->
+        <!-- <view class="weui-loadmore">
           <view class="weui-loading"/>
           <view class="weui-loadmore__tips">加载中</view>
-        </view>
+        </view> -->
       </scroll-view>
       <hoverBtn :postUrl="postUrl"></hoverBtn>
     </view>
@@ -70,7 +72,9 @@ console.debug = function(){}
 
 export default class extends wepy.page {
   config = {
-    navigationBarTitleText: '悬赏'
+    navigationBarTitleText: '悬赏',
+    backgroundTextStyle: 'light',
+    enablePullDownRefresh: true
   }
   data = {
     // 页面显示数据 (测试数据已移除)
@@ -190,6 +194,10 @@ export default class extends wepy.page {
   }
   onPullDownRefresh() {
     /** 清空任务数据重新请求#### */
+    let self = this
+    self.taskItems = []
+    self.currentPage = 0
+    self.loadMoreItems(self.getType)
   }
   updateTimeLeft() {
     /**
@@ -231,6 +239,10 @@ export default class extends wepy.page {
           .orderBy('postDate', 'desc')
           .skip(self.currentPage * self.pageNum)
           .limit(self.pageNum)
+          .field({
+            _openid: false,
+            _id: false
+          })
           .get()
           .then(res => {
             self.taskItems.push(...res.data)
@@ -315,7 +327,7 @@ export default class extends wepy.page {
 .tasklist {
   height: 100%;
   width: 100%;
-  padding-top: 50rpx;
+  //padding-top: 50rpx;
   .taskitem {
     width: 100%;
   }
