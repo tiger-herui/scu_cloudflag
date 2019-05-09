@@ -13,7 +13,7 @@
       </view> -->
       <scroll-view class="tasklist" scroll-y="true">
         <repeat for="{{ taskItems }}" key="index" index="index" item="item">
-          <navigator class="taskitem" url="./../pages/re_rewardDetail?id={{ item.detailId }}">
+          <navigator class="taskitem" url="./../pages/re_rewardDetail?id={{ item._id }}">
             <view class="taskitem_bd">
               <!-- 一个表示任务状态的图标，效果类似图章，放置在内容部分的左上角 -->
               <view class="taskitem_state">
@@ -54,11 +54,6 @@
             </view>
           </navigator>
         </repeat>
-        <!--这个loading不好看，弃用####-->
-        <!-- <view class="weui-loadmore">
-          <view class="weui-loading"/>
-          <view class="weui-loadmore__tips">加载中</view>
-        </view> -->
       </scroll-view>
       <hoverBtn :postUrl="postUrl"></hoverBtn>
     </view>
@@ -172,7 +167,7 @@ export default class extends wepy.page {
   }
   onLoad() {
     let self = this
-    wx.cloud.init()  // #### 只需要初始化一次，可移动到app.wpy中 
+    wx.cloud.init()  // #### 只需要初始化一次，可移动到app.wpy中
   }
   onReady() {
     let self = this
@@ -193,7 +188,7 @@ export default class extends wepy.page {
     self.loadMoreItems(self.getType)
   }
   onPullDownRefresh() {
-    /** 清空任务数据重新请求#### */
+    // 清空任务数据重新请求
     let self = this
     self.taskItems = []
     self.currentPage = 0
@@ -235,13 +230,12 @@ export default class extends wepy.page {
       case 'new':
       /* #### 从后端获取问题列表存储到taskList中，之后要放到云函数中 */
         // console.debug('new')
-        db.collection('reward_list')
+        db.collection('reward_detail')
           .orderBy('postDate', 'desc')
           .skip(self.currentPage * self.pageNum)
           .limit(self.pageNum)
           .field({
-            _openid: false,
-            _id: false
+            description: false
           })
           .get()
           .then(res => {

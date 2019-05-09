@@ -61,7 +61,7 @@ export default class extends wepy.page {
     taskInfo: {
       id: 'text_id',  // 任务id，用于请求任务详细信息
       title: 'title',
-      author: 'author',
+      author: 'author',  // 发布人的头像
       site: 'site',
       reward: 'reward',
       empiredDate: new Date(2019, 4, 19, 20, 15, 30, 123)
@@ -85,7 +85,9 @@ export default class extends wepy.page {
     }
   }
   onLoad() {
-    // 向服务器获取任务基本信息
+    // 首先要获取到用户的openid####
+    // 向服务器获取任务基本信息####
+
   }
   onShow() {
     /**

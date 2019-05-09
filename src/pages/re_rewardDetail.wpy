@@ -9,9 +9,7 @@
         <view class="page__title">{{ title }}</view>
         <view class="page__desc">
           <view class="taskAuthor">发起者：{{ author }}</view>
-          <view
-            class="taskDate"
-          >有效时间：{{ empiredDate }}</view>
+          <view class="taskDate">有效时间：{{ empiredDate }}</view>
           <view class="taskCate">地点：{{ site }}</view>
           <view class="reward">酬劳：{{ reward }}</view>
         </view>
@@ -25,12 +23,16 @@
     </scroll-view>
     <view class="page__ft">
       <!--其中一个是接单按钮，一个咨询。点击事件没写####-->
-      <button style="background-color:yellow;">咨询</button>
-      <button style="background-color:green;">接单</button>
+      <button class="reserve-btn" hover-class="hover-reserve-btn" @tap="onReserveBtntap">咨询</button>
+      <button
+        class="accept-btn"
+        hover-class="hover-accept-btn"
+        @tap="onAcceptBtnTap"
+        disabled="{{acceptBtnDisabled}}"
+      >接单</button>
     </view>
   </view>
 </template>
-
 <script>
 import wepy from 'wepy';
 console.debug = console.log;
@@ -38,13 +40,18 @@ console.debug = console.log;
 export default class extends wepy.page {
   config = {
     navigationBarTitleText: '悬赏详情',
-    backgroundColor: '#ffffff'
+    backgroundColor: '#ffffff' // #### 这条好像冇用
   };
   data = {
+    // 页面状态
+    acceptBtnDisabled: false,
+
+    // 页面数据
+    id: '',
     title: '',
     author: '发布者',
-    postDate: new Date,
-    empiredDate: new Date,
+    postDate: new Date(),
+    empiredDate: new Date(),
     site: '',
     reward: '',
     cate: '分类',
@@ -55,20 +62,62 @@ export default class extends wepy.page {
     // 一个解析富文本（或者只是带图片标签的文本）的组件
   };
   methods = {
+    onReserveBtntap() {
+      console.debug('有反应');
+    },
     onAcceptBtnTap() {
-      // 向服务器提交表单，得到回应后跳转到任务执行中页面
-      wepy.navigateTo({
-        url: './scu_rewardTask'
-      });
-      wepy.showToast({
-        title: '接受成功！',
-        icon: 'success'
-      });
+      let self = this;
+      // 防止多次点击
+      self.acceptBtnDisabled = true;
+
+      const db = wx.cloud.database();
+      let state = -1;
+
+      // 获取任务状态
+      db.collection('reward_detail')
+        .doc(self.id)
+        .get()
+        .then(res => {
+          state = res.data.state;
+          if (0 == state) {
+            return db
+              .collection('reward_detail')
+              .doc(self.id)
+              .update({
+                data: {
+                  state: 1,
+                  accepter: ''  // 接受者的openid ####
+                }
+              })
+          }
+        })
+        .then(res => {
+          console.debug(res);
+          wepy.navigateTo({
+            url: './re_rewardTask'
+          });
+          wepy.showToast({
+            title: '接受成功！',
+            icon: 'success',
+            duration: 1500
+          });
+        })
+        .catch(err => {
+          console.error(err);
+          wepy.showToast({
+            title: '请求服务器时发生错误',
+            icon: 'loading',
+            duration: 1500
+          });
+          state = -1;
+          
+        });
     }
   };
   onLoad(options) {
     let self = this;
     self.id = options.id;
+    wx.cloud.init(); // #### 应该只需要初始化一次，可放在app.wpy
   }
   onShow() {
     let self = this;
@@ -129,9 +178,17 @@ image {
       background-color: orange;
       color: white;
     }
-    &.remain-btn {
-      background-color: #fff;
+    &.hover-accept-btn {
+      background-color: orange;
+      color: black;
+    }
+    &.reserve-btn {
+      background-color: green;
       color: #999;
+    }
+    &.hover-reserve-btn {
+      background-color: green;
+      color: black;
     }
   }
 }
