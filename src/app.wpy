@@ -2,7 +2,6 @@
 import wepy from 'wepy'
 import 'wepy-async-function'
 
-
 export default class extends wepy.app {
   config = {
     pages: [
@@ -59,13 +58,12 @@ export default class extends wepy.app {
           iconPath: "icon/wode.png",
           selectedIconPath: "icon/wode02.png"
         }
-        
       ]
     }
   }
 
   globalData = {
-    verify:0
+    verify: 0
   };
 
   constructor () {
@@ -77,12 +75,8 @@ export default class extends wepy.app {
     this.testAsync()
   }
 
- 
-
   async testAsync () {
-   
   }
-
 }
 </script>
 
