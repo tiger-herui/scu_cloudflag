@@ -1,4 +1,4 @@
-<!--问答详情页面
+<!--悬赏详情页面
     以 scu_ 开头的页面及组件均在该项目中预览效果
     该页面使用app.wpy引入的weui样式-->
 <template>
@@ -14,7 +14,7 @@
           <view class="reward">酬劳：{{ reward }}</view>
         </view>
       </view>
-      <!--文章内容（最好用一个组件解析），暂时用个view占位-->
+      <!--文章内容（用富文本组件显示），####暂时用个view占位-->
       <view class="page__bd">
         <view class="weui-article">
           <view class="weui-article__section">{{ content }}</view>
@@ -71,7 +71,7 @@ export default class extends wepy.page {
       self.acceptBtnDisabled = true;
 
       const db = wx.cloud.database();
-      let state = -1;
+      let state = -1;  // -1表示未获取成功
 
       // 获取任务状态
       db.collection('reward_detail')

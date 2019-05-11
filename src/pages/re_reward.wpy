@@ -11,15 +11,16 @@
         </view>
         <view class="tab order" @tap="onOrderTap">筛选</view>
       </view> -->
+      <!-- <navigator class="taskitem" url="./../pages/re_rewardDetail?id={{ item._id }}"> -->
       <scroll-view class="tasklist" scroll-y="true">
         <repeat for="{{ taskItems }}" key="index" index="index" item="item">
-          <navigator class="taskitem" url="./../pages/re_rewardDetail?id={{ item._id }}">
+          <view class="taskitem" @tap="onItemTap" data-index="{{index}}">
             <view class="taskitem_bd">
               <!-- 一个表示任务状态的图标，效果类似图章，放置在内容部分的左上角 -->
               <view class="taskitem_state">
-                <image 
+                <image
                   src="./../images/taskState{{ item.state }}.png"
-                  style='width:100%;height:100%;opacity: 0.6;'
+                  style="width:100%;height:100%;opacity: 0.6;"
                   mode="aspectFill" />
               </view>
               <view class="taskitem_content">
@@ -27,32 +28,35 @@
                 <view class="taskitem_title {{ item.cover?'taskitem_title-with-cover':'' }}">
                   {{ item.title }}
                 </view>
+                <!--封面图片-->
                 <view class="taskitem_cover" wx:if="{{ item.cover && item.cover != 'none' }}">
                   <image 
                     src="{{ item.cover }}"
                     style='width:100%;height:100%;'
                     mode="aspectFill" />
                 </view>
+                <!--发布人头像-->
                 <view class="taskitem_avatar">
                   <image
                     src="{{ item.avatar }}"
                     mode="aspectFill"
                     style='width:100%;height:100%;' />
                 </view>
+                <!--悬赏任务其他信息-->
                 <view class="taskitem_info">
                   <view class="taskitem_info-tags">
                     <repeat for="{{ item.tags }}" key="index_tag" index="index_tag" item="item_tag">
-                      <view class="tag">{{ item_tag }}</view>
+                      <view class="tag" @tap.stop="onTagTap" data-tag="{{ item_tag }}">{{ item_tag }}</view>
                     </repeat>
                     </view>
-                  <view class="taskitem_info-siteNreward">
-                    {{ item.site + ' - ' + item.reward }}
+                  <view class="taskitem_info-reward">
+                    {{ item.reward }}
                   </view>
                   <view class="taskitem_info-taskdate">{{ item.timeLeftDisplayed }}</view>
                 </view>
               </view>
             </view>
-          </navigator>
+          </view>
         </repeat>
       </scroll-view>
       <hoverBtn :postUrl="postUrl"></hoverBtn>
@@ -79,7 +83,8 @@ export default class extends wepy.page {
     postUrl: './re_rewardPost',
     currentPage: 0,   // 当前页数(数据库)
     pageNum: 10,      // 每页的任务数量
-    getType: 'new',   // 悬赏任务的获取方式(排序方式)
+    getType: 'new',   // 悬赏任务的获取方式(筛选方式)
+    tag: '',
   }
   methods = {
     onSearchTap() {
@@ -109,6 +114,27 @@ export default class extends wepy.page {
             break;
         }
       })
+    },
+    onItemTap(e){
+      let self = this;
+      let idx = e.currentTarget.dataset.index;
+      if(typeof idx !== "undefined"){
+        wx.navigateTo({
+          url: './../pages/re_rewardDetail?id=' + self.taskItems[idx]._id
+        });
+      }
+    },
+    onTagTap(e){
+      let self = this;
+      let tag = e.currentTarget.dataset.tag;
+      console.debug(tag)
+      if(tag) {
+        self.getType = 'tag';
+        self.tag = tag;
+        self.currentPage = 0;
+        self.taskItems = [];
+        self.loadMoreItems(self.getType);
+      }
     },
     // 已弃用方法
     onOrderTapDeprecated() {
@@ -191,6 +217,7 @@ export default class extends wepy.page {
     // 清空任务数据重新请求
     let self = this
     self.taskItems = []
+    self.getType = 'new'
     self.currentPage = 0
     self.loadMoreItems(self.getType)
   }
@@ -239,6 +266,26 @@ export default class extends wepy.page {
           })
           .get()
           .then(res => {
+            self.taskItems.push(...res.data)
+            self.currentPage += 1
+            self.updateTimeLeft()
+            self.$apply()
+          }).catch(err => {
+            console.debug(err)
+          })
+        break
+      case 'tag':
+        db.collection('reward_detail')
+          .where({ site: self.tag })  // #### 这里限制了只能点第一个标签(地点)进行筛选
+          .orderBy('postDate', 'desc')
+          .skip(self.currentPage * self.pageNum)
+          .limit(self.pageNum)
+          .field({
+            description: false
+          })
+          .get()
+          .then(res => {
+            // console.debug(res)
             self.taskItems.push(...res.data)
             self.currentPage += 1
             self.updateTimeLeft()
@@ -399,11 +446,15 @@ export default class extends wepy.page {
     justify-content: flex-start;
     .tag {
       margin-bottom: 0;
-      // flex-basis: 25%;
+      margin-right: 20rpx; 
+      flex-basis: 20%;
       flex-grow: 0;
+      text-align: center;
+      border: 5rpx dotted #aaa;
+      border-radius: 20rpx;
     }
   }
-  .taskitem_info-siteNreward {
+  .taskitem_info-reward {
     flex-grow: 1;
   }
   .taskitem_info-taskdate {
